@@ -6,15 +6,14 @@ import Banner from '../components/Banner';
 import SmallCard from '../components/cards/SmallCard'
 import MediumCard from '../components/cards/MediumCard'
 import LargeCard from '../components/cards/LargeCard';
-
+import WhatsAppButton from '../components/buttons/WhatsAppButton';
 export default function Home({exploreData, cardsDate}) {
     
   return (
     <div className=''>
         <Head>
-            <title>
-                C4F Market Place
-            </title>
+            <title>Mallorca Transfer | Traslados desde y hacia el Aeropuerto</title>
+            <meta name="description" content="Especialistas en transportes en Mallorca, ofrecemos traslados desde y hacia el aeropuerto para particulares y empresas. ¡Reserva ahora para un servicio rápido y eficiente!" />
         </Head> 
 
         <Header />
@@ -22,7 +21,7 @@ export default function Home({exploreData, cardsDate}) {
         
         <main className='max-w-7xl mx-auto px-8 sm:px-16'>
             <section className='pt-6'>
-                <h2 className='text-4xl font-semibold'>Explore Nearby</h2>
+                <h2 className='text-4xl font-semibold'>Explora Mallorca</h2>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
                     {exploreData?.map((item, key) => (
                         <SmallCard key={key} img={item.img} location={item.location} distance={item.distance} />
@@ -53,6 +52,8 @@ export default function Home({exploreData, cardsDate}) {
         <Footer 
 
         />
+
+        <WhatsAppButton/>
 
     </div>
   )

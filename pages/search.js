@@ -18,11 +18,11 @@ function Search({searchResults}) {
   return (
     <div className='h-screen'>
         <Header 
-            placeholder={`${location} | ${range} | ${noOfGuests} huespedes` } 
+            placeholder={`${location} | ${range} | ${noOfGuests} pasajeros` } 
         />
         <main className='flex'>
             <section className='flex-grow pt-14 px-6'>
-                <p>300+ Stays {range} for  {noOfGuests} Guests</p>
+                <p>Tu traslado en Mallorca {range} para {noOfGuests} pasajeros</p>
                 <h1 className='text-3xl font-semibold '>Stays in {location}</h1>
                 <div className='hidden lg:inline-flex mb-5 space-x-3 text-gray-800'>
                     <p className='button'>Cancelation flexibility</p>

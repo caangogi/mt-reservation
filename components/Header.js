@@ -3,12 +3,15 @@ import Image from 'next/image'
 import { SearchIcon, GlobeAltIcon, MenuIcon, UserCircleIcon, UsersIcon } from '@heroicons/react/solid'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-import {DateRangePicker} from 'react-date-range';
+import {DateRange} from 'react-date-range';
 import { useRouter } from 'next/dist/client/router';
+import {mallorcaMunicipios} from '../components/data/MarllorcaMunicipios';
+import Logo from '../public/images/logo_whitout_text.png';
 
 function Header({placeholder}) {
 
   const [searchInput, setSearchInput] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
   const [noOfGuests, setNoOfGuests] = useState(1);
@@ -16,9 +19,29 @@ function Header({placeholder}) {
 
   const handleSelect = (ranges) =>{
       setStartDate(ranges.selection.startDate);
-      setEndDate(ranges.selection.endDate);
+      setEndDate(ranges.selection.endDate);                      
   }
 
+  const handleSearchInput = (event) => {
+    const input = event.target.value;
+    setSearchInput(input);
+  
+    if (input) {
+      const filteredSuggestions = mallorcaMunicipios.municipios.filter((municipio) =>
+        municipio.toLowerCase().startsWith(input.toLowerCase())
+      );
+      setSuggestions(filteredSuggestions);
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchInput(suggestion);
+    setSuggestions([]);
+  };
+  
+ 
   const selectionRange = {
     startDate: startDate,
     endDate: endDate,
@@ -37,44 +60,61 @@ function Header({placeholder}) {
     })
   }
 
-  
-  
   return (
-    <header className='sticky top-0 z-50 grid grid-cols-3 bg-white shadow-md p-5 md:px-10 '>
-      <div 
-        className='relative flex items-center h-10 cursor-pointer my-auto'
-        onClick={() => router.push('/')}
-      >
-        <Image 
-            src="https://firebasestorage.googleapis.com/v0/b/crowd4flipping-app.appspot.com/o/corporatives-images%2FCrowd4Flipping.png?alt=media&token=099adb87-325f-454f-87a4-20bb827ec1f4"
-            width={100}
-            height={100}
-        />
-      </div>
-      
-      <div className='flex items-center md:border-2 rounded-full py-2 md:shadow-sm'>
-        <input 
-          className='pl-5 bg-transparent outline-none flex-grow text-sm text-gray-600 placeholder-gray-400' 
-          type="text" 
-          placeholder={placeholder || "Start your search"}
-          value={searchInput}
-          onChange={(event) => setSearchInput(event.target.value) }
-        />
-        <SearchIcon className='hidden md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer md:mx-2'/>
-      </div>
+    <header className='sticky top-0 z-50 flex justify-between items-center lg:flex-row bg-white shadow-md p-5 md:px-10 flex-col gap-4'>
 
-      <div className='flex items-center space-x-4 justify-end text-gray-500'>
-        <p className='hidden md:inline cursor-pointer'>Become a host</p>
-        <GlobeAltIcon   className='h-6' /> 
-        <div className='flex items-center space-x-2 border-2 p-2 rounded-full'>
-            <MenuIcon className='h-6'/>
-            <UserCircleIcon className='h-6'/>
+        <div 
+          className='relative flex items-center gap-3 h-10 cursor-pointer my-auto'
+          onClick={() => router.push('/')}
+        >
+          <Image 
+              src={Logo}
+              width={50}
+              height={50}
+          />
+          <div className='block'>
+            <p className='text-xl text-blue-app'>Mallorca Transfer</p>
+            <span className='text-xs text-blue-app'> Big One For Groups</span>
         </div>
-      </div>
+        </div>
+      
+       <div className='flex items-center flex-col lg:flex-row  justify-around gap-3 w-fit'>
+        <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm'>
+            <span className='text-sm lg:text-lg'>Desde el aeropuerto</span>
+            <input 
+              className='pl-5 bg-transparent outline-none flex-grow text-lg text-gray-600 placeholder-gray-400' 
+              type="text" 
+              placeholder={placeholder || "Buscar destino"}
+              value={searchInput}
+              onChange={handleSearchInput}
+            />
+            <SearchIcon className='hidden md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer md:mx-2'/>
+            
+          </div>
+        
+          <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm' >
+            <span className='text-sm lg:text-lg'>Hacia el aeropuerto</span>
+            <input 
+              className='pl-5 bg-transparent outline-none flex-grow text-lg text-gray-600 placeholder-gray-400' 
+              type="text" 
+              placeholder={placeholder || "Buscar origen"}
+              value={searchInput}
+              onChange={handleSearchInput}
+            />
+            <SearchIcon className='hidden md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer md:mx-2'/>
+            
+          </div>
+       </div>
+
+        <ul className="suggestions-list">
+            {suggestions.map((suggestion) => (
+              <li key={suggestion} onClick={() => handleSuggestionClick(suggestion)}>{suggestion}</li>
+            ))}
+        </ul>
 
       {searchInput && (
         <div className='flex flex-col col-span-3 mx-auto'>
-          <DateRangePicker 
+          <DateRange 
             ranges={[selectionRange]}
             minDate={new Date()}
             rangeColors={['#00c3ff']}
