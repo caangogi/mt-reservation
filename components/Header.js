@@ -82,26 +82,26 @@ function Header({placeholder}) {
         <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm'>
             <span className='text-sm lg:text-lg'>Desde el aeropuerto</span>
             <input 
-              className='pl-5 bg-transparent outline-none flex-grow text-lg text-gray-600 placeholder-gray-400' 
+              className='pl-1 lg:pl-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400' 
               type="text" 
               placeholder={placeholder || "Buscar destino"}
               value={searchInput}
               onChange={handleSearchInput}
             />
-            <SearchIcon className='hidden md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer md:mx-2'/>
+            <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
             
           </div>
         
           <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm' >
             <span className='text-sm lg:text-lg'>Hacia el aeropuerto</span>
             <input 
-              className='pl-5 bg-transparent outline-none flex-grow text-lg text-gray-600 placeholder-gray-400' 
+              className='pl-1 lg:pl-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400' 
               type="text" 
               placeholder={placeholder || "Buscar origen"}
               value={searchInput}
               onChange={handleSearchInput}
             />
-            <SearchIcon className='hidden md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer md:mx-2'/>
+            <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
             
           </div>
        </div>
