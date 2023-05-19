@@ -99,6 +99,9 @@ function Header({placeholder}) {
     setEndDate(end);
   };
 
+
+ 
+
   return (
     <header 
       className='sticky top-0 z-50  p-5 md:px-10 flex-col '
