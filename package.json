@@ -9,6 +9,7 @@
     "@badrap/bar-of-progress": "^0.2.2",
     "@heroicons/react": "^1.0.6",
     "date-fns": "^2.29.3",
+    "framer-motion": "^10.12.12",
     "next": "latest",
     "react": "^18.2.0",
     "react-date-range": "^1.4.0",
