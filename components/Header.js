@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { SearchIcon, GlobeAltIcon, MenuIcon, UserCircleIcon, UsersIcon } from '@heroicons/react/solid'
 import {FaLuggageCart} from 'react-icons/fa'
+import {GiCycling} from 'react-icons/gi'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import {DateRange} from 'react-date-range';
@@ -10,8 +11,6 @@ import {mallorcaMunicipios} from '../components/data/MarllorcaMunicipios';
 import {DataTransfer} from '../components/data/TarifasTransporte';
 import Logo from '../public/images/logo_02.png';
 import {motion} from 'framer-motion';
-
-import styles from '../styles/datePicker.module.scss'
 
 function Header({placeholder}) {
 
@@ -104,10 +103,11 @@ function Header({placeholder}) {
 
   return (
     <header 
-      className='sticky top-0 z-50  p-5 md:px-10 flex-col '
+      className='sticky top-0 z-50  lg:p-5 md:px-10 flex-col '
     >
 
       <div className='flex flex-col gap-4 justify-around items-center lg:flex-row bg-white p-6 rounded-2xl lg:rounded-full shadow-md'>
+        
         <div 
           className='relative flex items-center gap-3 h-10 cursor-pointer my-auto'
           onClick={() => router.push('/')}
@@ -121,49 +121,50 @@ function Header({placeholder}) {
           <div className='flex flex-col'>
             <p className='text-xl text-blue-app'>Mallorca Transfer</p>
             <span className='text-xs text-blue-app'> Big One For Groups</span>
-        </div>
+          </div>
         </div>
       
         <div className='flex items-center flex-col lg:flex-row  justify-around gap-3 w-fit'>
-        <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm'>
-            <span className='text-sm lg:text-lg'>Desde el aeropuerto</span>
-            
-            <select 
-              value={searchInput} 
-              onChange={handleSearchInput} 
-              defaultValue='Buscar destino'
-              className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
-            >
-               <option value="">Buscar destino</option>
-              {DataTransfer?.map((item, i) => {
-                return(
-                  <option key={i} value={item.name}>{item.name}</option>
-                )
-              })}
-            </select>
-            <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
-            
-          </div>
+          <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm'>
+              <span className='text-sm lg:text-lg'>Desde el aeropuerto</span>
+              
+              <select 
+                value={searchInput} 
+                onChange={handleSearchInput} 
+                defaultValue='Buscar destino'
+                className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
+              >
+                <option value="">Buscar destino</option>
+                {DataTransfer?.map((item, i) => {
+                  return(
+                    <option key={i} value={item.name}>{item.name}</option>
+                  )
+                })}
+              </select>
+              <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
+              
+            </div>
         
-         {/*  <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm' >
-            <span className='text-sm lg:text-lg'>Hacia el aeropuerto</span>
-            <select 
-              value={searchInput} 
-              onChange={handleSearchInput} 
-              defaultValue='Buscar origen'
-              className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
-            >
-               <option value="">Buscar origen</option>
-              {DataTransfer?.map((item, i) => {
-                return(
-                  <option key={i} value={item.name}>{item.name}</option>
-                )
-              })}
-            </select>
-            <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
-            
-          </div> */}
+           {/*  <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm' >
+              <span className='text-sm lg:text-lg'>Hacia el aeropuerto</span>
+              <select 
+                value={searchInput} 
+                onChange={handleSearchInput} 
+                defaultValue='Buscar origen'
+                className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
+              >
+                <option value="">Buscar origen</option>
+                {DataTransfer?.map((item, i) => {
+                  return(
+                    <option key={i} value={item.name}>{item.name}</option>
+                  )
+                })}
+              </select>
+              <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
+              
+            </div> */}
         </div>
+
       </div>
 
       {searchInput && (
@@ -225,8 +226,8 @@ function Header({placeholder}) {
                 />
               </div>
               <div className='flex items-center border-b mb-4'>
-                <h2 className='text-2xl flex-grow font-semibold '>Número de maletas</h2>
-                <FaLuggageCart className='h-10 text-lg' />
+                <h2 className='text-2xl flex-grow font-semibold '>Número de bicicletas</h2>
+                <GiCycling className='h-10 text-lg' />
                 <input 
                   type="number" 
                   className='w-12 pl-2 text-2xl outline-none text-blue-app'
@@ -237,10 +238,10 @@ function Header({placeholder}) {
               </div>
               <div className='flex items-center border-b mb-4'>
                 <h2 className='text-2xl flex-grow font-semibold '>Silla de bebe</h2>
-                {/* <FaLuggageCart className='h-10 text-lg' /> */}
+                
                 <input 
                   type="checkbox" 
-                  className='w-12 pl-2 text-2xl outline-none text-blue-app'
+                  className='w-6 h-6 bg-blue-app '
                   value={noOfBags}
                   onChange={e => setNoOfBags(e.target.value)}
                   min={1}

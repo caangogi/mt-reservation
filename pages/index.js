@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Head from 'next/head'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -7,7 +7,28 @@ import SmallCard from '../components/cards/SmallCard'
 import MediumCard from '../components/cards/MediumCard'
 import LargeCard from '../components/cards/LargeCard';
 import WhatsAppButton from '../components/buttons/WhatsAppButton';
+import {DataTransfer} from '../components/data/TarifasTransporte';
+
 export default function Home({exploreData, cardsDate}) {
+
+    const [_cardsData, set_cardsData] = useState()
+
+    useEffect(() =>{
+
+        let combinedData = [];
+        for (let i = 0; i < exploreData.length; i++) {
+        combinedData.push({
+            name: DataTransfer[i].name,
+            img: exploreData[i].img,
+            price: DataTransfer[i].values[0]
+        });
+        }
+        set_cardsData(combinedData);
+        
+    }, []);
+
+
+    console.log(_cardsData);
     
   return (
     <div className=''>
@@ -23,13 +44,13 @@ export default function Home({exploreData, cardsDate}) {
             <section className='pt-6'>
                 <h2 className='text-4xl font-semibold'>Explora Mallorca</h2>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-                    {exploreData?.map((item, key) => (
-                        <SmallCard key={key} img={item.img} location={item.location} distance={item.distance} />
+                    {_cardsData?.map((item, key) => (
+                        <SmallCard key={key} img={item.img} location={item.name} price={item.price} />
                     ))}
                 </div>
             </section>
             <section>
-                <h2 className='text-4xl font-semibold'>Live anywhere</h2>
+                <h2 className='text-4xl font-semibold'>Viaja donde deseas</h2>
                 <div className='flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
                     {cardsDate?.map((item, key) => (
                         <MediumCard 
