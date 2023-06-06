@@ -12,15 +12,11 @@ function Search({}) {
     const formattedStartDate = new Date(startDate).toLocaleString();
     const formattedEndDate = new Date(endDate).toLocaleString();
     const range = `${formattedStartDate} - ${formattedEndDate}`;
-
-    console.log(startDate)
-    console.log(endDate)
-
-
+    
   return (
     <div className='h-screen'>
         <Header 
-            placeholder={`${location} | ${range} | ${noOfGuests} pasajeros` } 
+            placeholder={`${location}` } 
         />
         <main className='flex'>
             <section className='flex-grow pt-14 px-6 min-h-screen'>

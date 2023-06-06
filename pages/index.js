@@ -27,11 +27,9 @@ export default function Home({exploreData, cardsDate}) {
         
     }, []);
 
-
-    console.log(_cardsData);
     
   return (
-    <div className=''>
+    <div>
         <Head>
             <title>Mallorca Transfer | Traslados desde y hacia el Aeropuerto</title>
             <meta name="description" content="Especialistas en transportes en Mallorca, ofrecemos traslados desde y hacia el aeropuerto para particulares y empresas. ¡Reserva ahora para un servicio rápido y eficiente!" />

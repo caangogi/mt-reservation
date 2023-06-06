@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { SearchIcon, GlobeAltIcon, MenuIcon, UserCircleIcon, UsersIcon } from '@heroicons/react/solid'
 import {FaLuggageCart} from 'react-icons/fa'
-import {GiCycling} from 'react-icons/gi'
+import {GiCycling, GiAirplaneArrival, GiAirplaneDeparture} from 'react-icons/gi'
 import 'react-date-range/dist/styles.css'; // main css file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import {DateRange} from 'react-date-range';
@@ -14,19 +14,39 @@ import {motion} from 'framer-motion';
 
 function Header({placeholder}) {
 
+
+  const [bookingState, setBookingState] = useState({
+    startDate: new Date(),
+    endDate: new Date(),
+    numOfGuests: 5,
+    numOfBags: 0,
+    numOfBikes: 0,
+    babyChair: false
+  })
+
   const [searchInput, setSearchInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [startDate, setStartDate] = useState(new Date())
-  const [endDate, setEndDate] = useState(new Date())
-  const [noOfGuests, setNoOfGuests] = useState(5);
-  const [noOfBags, setNoOfBags] = useState(0);
   const [formStep, setFormStep] = useState(1)
+  const [fromOurTo, setFromOurTo] = useState(true)
 
   const router = useRouter();
 
   const handleSelect = (ranges) =>{
-      setStartDate(ranges.selection.startDate);
-      setEndDate(ranges.selection.endDate);                      
+      setBookingState({
+        ...bookingState,
+        startDate: ranges.selection.startDate,
+        endDate: ranges.selection.endDate
+      
+      })
+  };
+
+  const bookingStateChange = (e) =>{
+    const value = e.target.type ===  'checkbox' ?  e.target.checked : e.target.value;
+     setBookingState({
+      ...bookingState,
+        [e.target.name]  : [value]
+     })
+
   }
 
   const handleSearchInput = (event) => {
@@ -64,42 +84,39 @@ function Header({placeholder}) {
     }
     
     return ubicacionData.values[rangoPasajeros];
-  }
+  };
  
   const selectionRange = {
-    startDate: startDate,
-    endDate: endDate,
+    startDate: bookingState.startDate,
+    endDate: bookingState.endDate,
     key:'selection'
-  }
+  };
 
   const search = () =>{
     router.push({
       pathname: '/search',
       query: {
         location: searchInput,
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-        noOfGuests,
-        noOfBags
+        startDate: bookingState.startDate.toISOString(),
+        endDate: bookingState.endDate.toISOString(),
+        noOfGuests : bookingState.numOfGuests,
+        noOfBags: bookingState.numOfBags,
+        numOfBikes : bookingState.numOfBikes,
+        price: calcularPrecio(searchInput, bookingState.numOfGuests)
       }
     })
-  }
+  };
 
   const nextStep = () =>{
     return setFormStep(() => formStep + 1)
-  }
-  const prevStep = () =>{
-    return setFormStep(() => formStep - 1)
-  }
-
-  const onChange = (dates) => {
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
   };
 
+  const prevStep = () =>{
+    return setFormStep(() => formStep - 1)
+  };
 
- 
+  console.log(bookingState)
+
 
   return (
     <header 
@@ -126,7 +143,38 @@ function Header({placeholder}) {
       
         <div className='flex items-center flex-col lg:flex-row  justify-around gap-3 w-fit'>
           <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm'>
-              <span className='text-sm lg:text-lg'>Desde el aeropuerto</span>
+
+             {fromOurTo ? (
+                <div 
+                  onClick={() => setFromOurTo(false)}
+                  className='flex items-center gap-4'
+                >
+                  <GiAirplaneArrival 
+                    style={{
+                      fontSize: '2rem',
+                      color: '#00CCFF'
+                    }}
+                  />
+                  <span  className='text-sm lg:text-lg cursor-pointer'>
+                    Desde el aeropuerto
+                  </span>
+                </div> 
+             ) : (
+                <div
+                  onClick={() => setFromOurTo(true)}
+                  className='flex items-center gap-4'
+                > 
+                  <GiAirplaneDeparture
+                    style={{
+                      fontSize: '2rem',
+                      color: '#00CCFF'
+                    }}
+                  />
+                  <span className='text-sm lg:text-lg cursor-pointer'>
+                    Hacia el aeropuerto
+                  </span>
+                </div>
+             )}
               
               <select 
                 value={searchInput} 
@@ -134,7 +182,11 @@ function Header({placeholder}) {
                 defaultValue='Buscar destino'
                 className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
               >
-                <option value="">Buscar destino</option>
+                <option value="">
+                  {
+                    placeholder ? placeholder : fromOurTo ? 'Buscar destino' : 'Buscar origen'
+                  }
+                </option>
                 {DataTransfer?.map((item, i) => {
                   return(
                     <option key={i} value={item.name}>{item.name}</option>
@@ -144,27 +196,7 @@ function Header({placeholder}) {
               <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
               
             </div>
-        
-           {/*  <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm' >
-              <span className='text-sm lg:text-lg'>Hacia el aeropuerto</span>
-              <select 
-                value={searchInput} 
-                onChange={handleSearchInput} 
-                defaultValue='Buscar origen'
-                className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
-              >
-                <option value="">Buscar origen</option>
-                {DataTransfer?.map((item, i) => {
-                  return(
-                    <option key={i} value={item.name}>{item.name}</option>
-                  )
-                })}
-              </select>
-              <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
-              
-            </div> */}
         </div>
-
       </div>
 
       {searchInput && (
@@ -179,7 +211,6 @@ function Header({placeholder}) {
           }}
         >
 
-
           {formStep === 1 && (
             <DateRange 
               ranges={[selectionRange]}
@@ -189,18 +220,16 @@ function Header({placeholder}) {
             />
           )} 
           
-
-
-
           <div className='flex items-center border-b mb-4'>
             <h2 className='text-2xl flex-grow font-semibold '>Número de pasajeros</h2>
             <UsersIcon className='h-5' />
             <input 
               type="number" 
               className='w-12 pl-2 text-2xl outline-none text-blue-app'
-              value={noOfGuests}
-              onChange={e => setNoOfGuests(e.target.value)}
-              min={1}
+              name='numOfGuests'
+              value={bookingState.numOfGuests}
+              onChange={bookingStateChange}
+              min={0}
             />
           </div>
 
@@ -220,8 +249,9 @@ function Header({placeholder}) {
                 <input 
                   type="number" 
                   className='w-12 pl-2 text-2xl outline-none text-blue-app'
-                  value={noOfBags}
-                  onChange={e => setNoOfBags(e.target.value)}
+                  name='numOfBags'
+                  value={bookingState.numOfBags}
+                  onChange={bookingStateChange}
                   min={1}
                 />
               </div>
@@ -231,9 +261,10 @@ function Header({placeholder}) {
                 <input 
                   type="number" 
                   className='w-12 pl-2 text-2xl outline-none text-blue-app'
-                  value={noOfBags}
-                  onChange={e => setNoOfBags(e.target.value)}
-                  min={1}
+                  name='numOfBikes'
+                  value={bookingState.numOfBikes}
+                  onChange={bookingStateChange}
+                  min={0}
                 />
               </div>
               <div className='flex items-center border-b mb-4'>
@@ -242,24 +273,14 @@ function Header({placeholder}) {
                 <input 
                   type="checkbox" 
                   className='w-6 h-6 bg-blue-app '
-                  value={noOfBags}
-                  onChange={e => setNoOfBags(e.target.value)}
-                  min={1}
+                  name='babyChair'
+                  value={bookingState.babyChair}
+                  onChange={bookingStateChange}
+                  min={0}
                 />
               </div>
             </motion.div>
           )}
-          
-
-          <div className='text-center m-4'>
-
-            {searchInput != "" &&   (
-              <>
-                <h1 className='text-2xl text-green-app font-semibold '> Precio: €{calcularPrecio(searchInput, noOfGuests)}  </h1>
-              </>
-            )}
-
-          </div>
 
           <div className='flex '>
             <button 
@@ -271,7 +292,9 @@ function Header({placeholder}) {
                 return setSearchInput("")
               }}
             >
-              Cancelar
+              <span className='text-sm lg:text-lg cursor-pointer'>
+                Cancelar
+              </span>
             </button>
             <button 
               className='flex-grow text-blue-app border-2 border-blue-app rounded-full '
@@ -282,11 +305,11 @@ function Header({placeholder}) {
                 return search()
               }}
             >
-              Reservar
+              <span className='text-sm lg:text-lg cursor-pointer'>
+                Reservar
+              </span>
             </button>
           </div>
-
-         
 
         </motion.div>
       </div>
