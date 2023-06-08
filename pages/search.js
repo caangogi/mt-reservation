@@ -1,9 +1,8 @@
 import React from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import InfoCard from '../components/cards/InfoCard';
+import LargeCard  from '../components/cards/LargeCard';
 import { useRouter } from 'next/dist/client/router';
-import {format} from 'date-fns'
 
 function Search({}) {
 
@@ -13,22 +12,43 @@ function Search({}) {
     const formattedEndDate = new Date(endDate).toLocaleString();
     const range = `${formattedStartDate} - ${formattedEndDate}`;
 
-
-    console.log(router.query)
-
   return (
     <div className='h-screen'>
         <Header 
             placeholder={`${location}` } 
         />
-        <main className='flex'>
-            <section className='flex-grow pt-14 px-6 min-h-screen'>
-                <h1 className='text-3xl font-semibold '>Tu traslado a {location} desde el aeropuerto el {range} para {noOfGuests} pasajeros con {noOfBags} maletas</h1>
+        <main className='max-w-7xl mx-auto px-8 sm:px-16 flex flex-col gap-20'>
+            <section className='flex-grow pt-14 px-6 min-h-fit'>
+                
+                <h1 className=''>Tu traslado a {location} desde el aeropuerto el {range} para {noOfGuests} pasajeros con {noOfBags} maletas</h1>
+                
+
+                {startDate === endDate ? 
+                    (
+                        <h1>
+                            Tu traslado es solo de ida, reservando ida y regreso podrás tener un ahorro del 7%
+                        </h1>
+                    ) 
+                    
+                    :
+
+                    (
+                        <h1>Tu traslado es ida y regreso</h1>
+                    )
+                }
+
             </section>
+
+            <LargeCard 
+                img='https://links.papareact.com/4cj'
+                title='¿Inquietudes? Contáctanos por WhatsApp'
+                description="Contáctanos para resolver tus inquietudes"
+                buttonText='Contáctanos por WhatsApp'
+            />
         </main>
         <Footer />
     </div>
   )
 }
 
-export default Search;
+export default Search; 

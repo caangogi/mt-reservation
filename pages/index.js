@@ -8,13 +8,13 @@ import MediumCard from '../components/cards/MediumCard'
 import LargeCard from '../components/cards/LargeCard';
 import WhatsAppButton from '../components/buttons/WhatsAppButton';
 import {DataTransfer} from '../components/data/TarifasTransporte';
+import {CardsData} from '../components/data/MediumCardsData'
 
 export default function Home({exploreData, cardsDate}) {
 
     const [_cardsData, set_cardsData] = useState()
 
     useEffect(() =>{
-
         let combinedData = [];
         for (let i = 0; i < exploreData.length; i++) {
         combinedData.push({
@@ -24,7 +24,6 @@ export default function Home({exploreData, cardsDate}) {
         });
         }
         set_cardsData(combinedData);
-        
     }, []);
 
     
@@ -38,7 +37,7 @@ export default function Home({exploreData, cardsDate}) {
         <Header />
         <Banner />
         
-        <main className='max-w-7xl mx-auto px-8 sm:px-16'>
+        <main className='max-w-7xl mx-auto px-8 sm:px-16 flex flex-col gap-20'>
 
             <section className='pt-6'>
                 <h2 className='text-4xl font-semibold'>Explora Mallorca</h2>
@@ -48,17 +47,19 @@ export default function Home({exploreData, cardsDate}) {
                     ))}
                 </div>
             </section>
-            
+
             <section>
-                <h2 className='text-4xl font-semibold'>Viaja donde deseas</h2>
-                <div className='flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
-                    {cardsDate?.map((item, key) => (
-                        <MediumCard 
-                            key={key}
-                            img={item.img}
-                            title={item.title}
-                        />
-                    ))}
+                <h2 className='text-4xl font-semibold'>Lugares que visitar en Mallorca</h2>
+                <div className='flex justify-between space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
+                    {CardsData?.map((item, key) => {
+                        if (key <= 2) return(
+                            <MediumCard 
+                                key={key}
+                                img={item.image}
+                                title={item.title}
+                            />
+                        )
+                    })}
                 </div>
             </section>
 

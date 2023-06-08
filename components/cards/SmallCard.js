@@ -9,11 +9,11 @@ function SmallCard({img, location, price}) {
                 src={img}
                 layout='fill'
                 className='rounded-lg'
+                alt={location}
             />
         </div>
         <div>
             <h2>{location}</h2>
-            <h3 className='text-gray-500'> Desde: €{price} <br/> hasta 5 pasajeros.</h3>
         </div>
     </div>
   )
