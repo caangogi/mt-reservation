@@ -39,6 +39,7 @@ export default function Home({exploreData, cardsDate}) {
         <Banner />
         
         <main className='max-w-7xl mx-auto px-8 sm:px-16'>
+
             <section className='pt-6'>
                 <h2 className='text-4xl font-semibold'>Explora Mallorca</h2>
                 <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
@@ -47,6 +48,7 @@ export default function Home({exploreData, cardsDate}) {
                     ))}
                 </div>
             </section>
+            
             <section>
                 <h2 className='text-4xl font-semibold'>Viaja donde deseas</h2>
                 <div className='flex space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
@@ -62,10 +64,11 @@ export default function Home({exploreData, cardsDate}) {
 
             <LargeCard 
                 img='https://links.papareact.com/4cj'
-                title='The Greatedt Outdoors'
-                description="WishLists curated by Crowd4Flipping"
-                buttonText='Get Inspired'
+                title='¿Inquietudes? Contáctanos por WhatsApp'
+                description="Contáctanos para resolver tus inquietudes"
+                buttonText='Contáctanos por WhatsApp'
             />
+
         </main>
         
         <Footer 

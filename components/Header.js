@@ -14,7 +14,6 @@ import {motion} from 'framer-motion';
 
 function Header({placeholder}) {
 
-
   const [bookingState, setBookingState] = useState({
     startDate: new Date(),
     endDate: new Date(),
@@ -22,7 +21,7 @@ function Header({placeholder}) {
     numOfBags: 0,
     numOfBikes: 0,
     babyChair: false
-  })
+  });
 
   const [searchInput, setSearchInput] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -114,13 +113,13 @@ function Header({placeholder}) {
   const prevStep = () =>{
     return setFormStep(() => formStep - 1)
   };
-
-  console.log(bookingState)
+/* 
+  console.log(bookingState) */
 
 
   return (
     <header 
-      className='sticky top-0 z-50  lg:p-5 md:px-10 flex-col '
+      className='sticky top-0 z-50 py-1 md:px-10 flex-col'
     >
 
       <div className='flex flex-col gap-4 justify-around items-center lg:flex-row bg-white p-6 rounded-2xl lg:rounded-full shadow-md'>
@@ -137,13 +136,13 @@ function Header({placeholder}) {
           />
           <div className='flex flex-col'>
             <p className='text-xl text-blue-app'>Mallorca Transfer</p>
-            <span className='text-xs text-blue-app'> Big One For Groups</span>
+            <span className='text-xs text-blue-app'>Big One For Groups</span>
           </div>
         </div>
       
-        <div className='flex items-center flex-col lg:flex-row  justify-around gap-3 w-fit'>
-          <div className='flex items-center border-2 rounded-full py-2 pl-3 shadow-sm'>
+        <div className='flex items-center justify-around'>
 
+          <div className='flex flex-col lg:flex-row items-left border-2 rounded-full py-2 pl-3 shadow-sm w-screen lg:w-fit'>
              {fromOurTo ? (
                 <div 
                   onClick={() => setFromOurTo(false)}
@@ -156,7 +155,7 @@ function Header({placeholder}) {
                     }}
                   />
                   <span  className='text-sm lg:text-lg cursor-pointer'>
-                    Desde el aeropuerto
+                    Desde el aeropuerto a
                   </span>
                 </div> 
              ) : (
@@ -171,36 +170,39 @@ function Header({placeholder}) {
                     }}
                   />
                   <span className='text-sm lg:text-lg cursor-pointer'>
-                    Hacia el aeropuerto
+                    Hacia el aeropuerto desde
                   </span>
                 </div>
              )}
               
+             <div className='flex '>
               <select 
-                value={searchInput} 
-                onChange={handleSearchInput} 
-                defaultValue='Buscar destino'
-                className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-sm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
-              >
-                <option value="">
-                  {
-                    placeholder ? placeholder : fromOurTo ? 'Buscar destino' : 'Buscar origen'
-                  }
-                </option>
-                {DataTransfer?.map((item, i) => {
-                  return(
-                    <option key={i} value={item.name}>{item.name}</option>
-                  )
-                })}
-              </select>
-              <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
-              
-            </div>
+                  value={searchInput} 
+                  onChange={handleSearchInput} 
+                  defaultValue='Buscar destino'
+                  className='pl-1 pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-xsm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer'
+                >
+                  <option value="">
+                    {
+                      placeholder ? placeholder : fromOurTo ? 'Buscar destino' : 'Buscar origen'
+                    }
+                  </option>
+                  {DataTransfer?.map((item, i) => {
+                    return(
+                      <option key={i} value={item.name}>{item.name}</option>
+                    )
+                  })}
+                </select>
+                <SearchIcon className='md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2'/>
+             </div>
+          </div>
+
         </div>
+
       </div>
 
       {searchInput && (
-        <div className='bg-white w-96 flex flex-col col-span-3 mx-auto mt-2 border-2  p-4 rounded-2xl shadow-md'>
+        <div className='bg-white w-max lg:w-96 flex flex-col col-span-3 mx-auto mt-2 border-2  p-4 rounded-2xl shadow-md'>
         <motion.div 
           className='flex flex-col col-span-3 mx-auto w-80 mt-2'
           initial={{ y: 50, opacity: 0 }}
@@ -221,10 +223,11 @@ function Header({placeholder}) {
           )} 
           
           <div className='flex items-center border-b mb-4'>
-            <h2 className='text-2xl flex-grow font-semibold '>Número de pasajeros</h2>
+            <h2 className='text-sm lg:text-xl flex-grow font-semibold '>Número de pasajeros</h2>
             <UsersIcon className='h-5' />
             <input 
               type="number" 
+              inputmode="numeric"
               className='w-12 pl-2 text-2xl outline-none text-blue-app'
               name='numOfGuests'
               value={bookingState.numOfGuests}
@@ -244,10 +247,11 @@ function Header({placeholder}) {
             >
               
               <div className='flex items-center border-b mb-4'>
-                <h2 className='text-2xl flex-grow font-semibold '>Número de maletas</h2>
+                <h2 className='text-sm lg:text-xl flex-grow font-semibold '>Número de maletas</h2>
                 <FaLuggageCart className='h-10 text-lg' />
                 <input 
                   type="number" 
+                  inputmode="numeric"
                   className='w-12 pl-2 text-2xl outline-none text-blue-app'
                   name='numOfBags'
                   value={bookingState.numOfBags}
@@ -256,10 +260,11 @@ function Header({placeholder}) {
                 />
               </div>
               <div className='flex items-center border-b mb-4'>
-                <h2 className='text-2xl flex-grow font-semibold '>Número de bicicletas</h2>
+                <h2 className='text-sm lg:text-xl flex-grow font-semibold '>Número de bicicletas</h2>
                 <GiCycling className='h-10 text-lg' />
                 <input 
                   type="number" 
+                  inputmode="numeric"
                   className='w-12 pl-2 text-2xl outline-none text-blue-app'
                   name='numOfBikes'
                   value={bookingState.numOfBikes}
@@ -268,8 +273,7 @@ function Header({placeholder}) {
                 />
               </div>
               <div className='flex items-center border-b mb-4'>
-                <h2 className='text-2xl flex-grow font-semibold '>Silla de bebe</h2>
-                
+                <h2 className='text-sm lg:text-xl flex-grow font-semibold '>Silla de bebe</h2>
                 <input 
                   type="checkbox" 
                   className='w-6 h-6 bg-blue-app '

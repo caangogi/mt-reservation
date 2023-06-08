@@ -12,7 +12,10 @@ function Search({}) {
     const formattedStartDate = new Date(startDate).toLocaleString();
     const formattedEndDate = new Date(endDate).toLocaleString();
     const range = `${formattedStartDate} - ${formattedEndDate}`;
-    
+
+
+    console.log(router.query)
+
   return (
     <div className='h-screen'>
         <Header 
