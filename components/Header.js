@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import styles from '../styles/Header.module.scss';
 import Image from 'next/image'
 import { SearchIcon, GlobeAltIcon, MenuIcon, UserCircleIcon, UsersIcon } from '@heroicons/react/solid'
 import {FaLuggageCart} from 'react-icons/fa'
@@ -12,6 +13,8 @@ import {mallorcaMunicipios} from '../components/data/MarllorcaMunicipios';
 import {DataTransfer} from '../components/data/TarifasTransporte';
 import Logo from '../public/images/logo_02.png';
 import {motion} from 'framer-motion';
+
+import {db} from '../services/FirebaseService';
 
 function Header({placeholder}) {
 
@@ -100,6 +103,9 @@ function Header({placeholder}) {
   };
 
   const search = () =>{
+
+    createBooking(bookingState);
+
     router.push({
       pathname: '/search',
       query: {
@@ -115,6 +121,17 @@ function Header({placeholder}) {
       }
     })
   };
+
+  console.log(bookingState)
+
+  const createBooking = async (bookingState) => {
+    try {
+      const result = await db.collection("bookings").add(bookingState);
+      console.log(result)
+    } catch (error) {
+      console.log(error)
+    }
+  }
 
   const nextStep = () =>{
     return setFormStep(() => formStep + 1)
@@ -189,7 +206,7 @@ function Header({placeholder}) {
                   value={searchInput} 
                   onChange={handleSearchInput} 
                   defaultValue='Buscar destino'
-                  className='pr-1 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-xsm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer text-center lg:text-left'
+                  className='pl-5 pr-5 lg:pl-5 lg:pr-5 bg-transparent outline-none flex-grow text-xsm lg:text-lg text-gray-600 placeholder-gray-400 cursor-pointer text-center lg:text-left'
                 >
                   <option value="" className='text-sm lg:text-lg cursor-pointer'>
                     {
@@ -212,215 +229,231 @@ function Header({placeholder}) {
       </div>
 
       {searchInput && (
-        <div className='bg-white w-max lg:w-96 flex flex-col col-span-3 mx-auto mt-2 border-2  p-4 rounded-2xl shadow-md'>
-        <motion.div 
-          className='flex flex-col col-span-3 mx-auto w-80 mt-2'
-          initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{
-              delay: 0.3,
-              duration: .21,
-          }}
-        >
-          
+        <div className='flex justify-center'>
 
-          {formStep === 1 && (
-            <>
-              <DateRange 
-                ranges={[selectionRange]}
-                minDate={new Date()}
-                rangeColors={['#00c3ff']}
-                onChange={handleSelect}
-              />
-              <div className='flex items-center border-b mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de pasajeros</h2>
-                <UsersIcon className='h-5' />
-                <input 
-                  type="number" 
-                  inputMode="numeric"
-                  className='w-12 pl-2 text-2xl outline-none text-blue-app'
-                  name='numOfGuests'
-                  value={bookingState.numOfGuests}
-                  onChange={bookingStateChange}
-                  min={0}
-                />
-              
-              </div>
-              <div className='flex items-center border-b mb-4 pl-2'>
-                {bookingState.startDate === bookingState.endDate && (<h2 className='text-sm lg:text-lg flex-grow'>Solo ida</h2>)}
-                {bookingState.startDate < bookingState.endDate && (
-                  <>
-                      <h2 className='text-sm lg:text-lg flex-grow text-green-wapp'>Ida y regreso, ahorra hasta un 15%</h2>
-                      <GiTwoCoins className='text-sm lg:text-2xl flex-grow text-green-wapp'/>
-                  </>
-                )}
-              </div>
-            </>
-          )} 
-         
-          
-          {formStep === 2 && ( 
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
+          <motion.div 
+            className={styles.steps_container}
+            initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{
+                delay: 0.3,
+                duration: .5,
+            }}
+          >
+            <div className={styles.steps_content}>
+
+
+
+            </div>
+          </motion.div>
+
+
+
+
+          <motion.div 
+            className='flex flex-col col-span-3 w-max lg:w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white'
+            initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
                 delay: 0.3,
                 duration: .21,
-              }}
-            >
-              
-              <div className='flex items-center border-b mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de maletas</h2>
-                <FaLuggageCart className='h-10 text-lg' />
-                <input 
-                  type="number" 
-                  inputMode="numeric"
-                  className='w-12 pl-2 text-2xl outline-none text-blue-app'
-                  name='numOfBags'
-                  value={bookingState.numOfBags}
-                  onChange={bookingStateChange}
-                  min={1}
-                />
-              </div>
-              <div className='flex items-center border-b mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de muchilas</h2>
-                <GiSchoolBag className='h-10 text-lg' />
-                <input 
-                  type="number" 
-                  inputMode="numeric"
-                  className='w-12 pl-2 text-2xl outline-none text-blue-app'
-                  name='numOfMiniBags'
-                  value={bookingState.numOfMiniBags}
-                  onChange={bookingStateChange}
-                  min={1}
-                />
-              </div>
-              <div className='flex items-center border-b mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de bicicletas</h2>
-                <GiCycling className='h-10 text-lg' />
-                <input 
-                  type="number" 
-                  inputMode="numeric"
-                  className='w-12 pl-2 text-2xl outline-none text-blue-app'
-                  name='numOfBikes'
-                  value={bookingState.numOfBikes}
-                  onChange={bookingStateChange}
-                  min={0}
-                />
-              </div>
-              <div className='flex items-center border-b mb-4 pr-5'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Silla de bebe</h2>
-                <input 
-                  type="checkbox" 
-                  className='w-6 h-6 bg-blue-app '
-                  name='babyChair'
-                  value={bookingState.babyChair}
-                  onChange={bookingStateChange}
-                  min={0}
-                />
-              </div>
-              <div className='flex items-center border-b mb-4 pl-2'>
-                {bookingState.startDate === bookingState.endDate && (<h2 className='text-sm lg:text-lg flex-grow'>Solo ida</h2>)}
-                {bookingState.startDate < bookingState.endDate && (<h2 className='text-sm lg:text-lg flex-grow text-green-app'>Ida y regreso</h2>)}
-              </div>
-            </motion.div>
-          )}
+            }}
+          >
+            
 
-          {formStep === 3 && ( 
-            <motion.div
-              initial={{ y: 50, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{
-                delay: 0.3,
-                duration: .21,
-              }}
-            >
-              
-              <div className='flex flex-col mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Nombre</h2>
-                <input 
-                  type="text" 
-                  className='pl-2 py-1 text-sm lg:text-lg text-blue-app border-2 rounded-2xl mt-1'
-                  name='name'
-                  value={bookingState.name}
-                  onChange={bookingStateChange}
+            {formStep === 1 && (
+              <>
+                <DateRange 
+                  ranges={[selectionRange]}
+                  minDate={new Date()}
+                  rangeColors={['#00c3ff']}
+                  onChange={handleSelect}
                 />
-              </div>
+                <div className='flex items-center border-b mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de pasajeros</h2>
+                  <UsersIcon className='h-5' />
+                  <input 
+                    type="number" 
+                    inputMode="numeric"
+                    className='w-12 pl-2 text-2xl outline-none text-blue-app'
+                    name='numOfGuests'
+                    value={bookingState.numOfGuests}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                
+                </div>
+                <div className='flex items-center border-b mb-4 pl-2'>
+                  {bookingState.startDate === bookingState.endDate && (<h2 className='text-sm lg:text-lg flex-grow'>Solo ida</h2>)}
+                  {bookingState.startDate < bookingState.endDate && (
+                    <>
+                        <h2 className='text-sm lg:text-lg flex-grow text-green-wapp'>Ida y regreso, ahorra hasta un 15%</h2>
+                        <GiTwoCoins className='text-sm lg:text-2xl flex-grow text-green-wapp'/>
+                    </>
+                  )}
+                </div>
+              </>
+            )} 
+            
+            {formStep === 2 && ( 
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  delay: 0.3,
+                  duration: .21,
+                }}
+              >
+                
+                <div className='flex items-center border-b mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de maletas</h2>
+                  <FaLuggageCart className='h-10 text-lg' />
+                  <input 
+                    type="number" 
+                    inputMode="numeric"
+                    className='w-12 pl-2 text-2xl outline-none text-blue-app'
+                    name='numOfBags'
+                    value={bookingState.numOfBags}
+                    onChange={bookingStateChange}
+                    min={1}
+                  />
+                </div>
+                <div className='flex items-center border-b mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de muchilas</h2>
+                  <GiSchoolBag className='h-10 text-lg' />
+                  <input 
+                    type="number" 
+                    inputMode="numeric"
+                    className='w-12 pl-2 text-2xl outline-none text-blue-app'
+                    name='numOfMiniBags'
+                    value={bookingState.numOfMiniBags}
+                    onChange={bookingStateChange}
+                    min={1}
+                  />
+                </div>
+                <div className='flex items-center border-b mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de bicicletas</h2>
+                  <GiCycling className='h-10 text-lg' />
+                  <input 
+                    type="number" 
+                    inputMode="numeric"
+                    className='w-12 pl-2 text-2xl outline-none text-blue-app'
+                    name='numOfBikes'
+                    value={bookingState.numOfBikes}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                </div>
+                <div className='flex items-center border-b mb-4 pr-5'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Silla de bebe</h2>
+                  <input 
+                    type="checkbox" 
+                    className='w-6 h-6 bg-blue-app '
+                    name='babyChair'
+                    value={bookingState.babyChair}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                </div>
+              </motion.div>
+            )}
 
-              <div className='flex flex-col items-left mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Tipo de documento</h2>
-                <input 
-                  type="text"
-                  list='documentTypes'
-                  className='border-2 rounded-2xl pl-2 py-1 text-sm lg:text-lg outline-none text-blue-app'
-                  name='documentType'
-                  value={bookingState.documentType}
-                  onChange={bookingStateChange}
-                />
-                <datalist id='documentTypes'>
-                  <option value="DNI"></option>
-                  <option value="NIE"></option>
-                  <option value="PASAPORTE"></option>
-                </datalist>
-              </div>
+            {formStep === 3 && ( 
+              <motion.div
+                initial={{ y: 50, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{
+                  delay: 0.3,
+                  duration: .21,
+                }}
+              >
+                
+                <div className='flex flex-col mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Nombre</h2>
+                  <input 
+                    type="text" 
+                    className='pl-2 py-1 text-sm lg:text-lg text-blue-app border-2 rounded-2xl mt-1'
+                    name='name'
+                    value={bookingState.name}
+                    onChange={bookingStateChange}
+                  />
+                </div>
 
-              <div className='flex flex-col mb-4'>
-                <h2 className='text-sm lg:text-lg flex-grow  mt-1'>Número de documento</h2>
-                <input 
-                  type="text" 
-                  className='text-sm lg:text-lg text-blue-app pl-2 py-1 border-2 rounded-2xl'
-                  name='document'
-                  value={bookingState.document}
-                  onChange={bookingStateChange}
-                />
-              </div>
-              <div className='flex items-center border-b mb-4 pr-5'>
-                <h2 className='text-sm lg:text-lg flex-grow pl-2'>Aceptar terminos y condiciones</h2>
-                <input 
-                  type="checkbox" 
-                  className='w-6 h-6 bg-blue-app '
-                  name='babyChair'
-                  value={bookingState.babyChair}
-                  onChange={bookingStateChange}
-                  min={0}
-                />
-              </div>
-            </motion.div>
-          )}
+                <div className='flex flex-col items-left mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Tipo de documento</h2>
+                  <input 
+                    type="text"
+                    list='documentTypes'
+                    className='border-2 rounded-2xl pl-2 py-1 text-sm lg:text-lg outline-none text-blue-app'
+                    name='documentType'
+                    value={bookingState.documentType}
+                    onChange={bookingStateChange}
+                  />
+                  <datalist id='documentTypes'>
+                    <option value="DNI"></option>
+                    <option value="NIE"></option>
+                    <option value="PASAPORTE"></option>
+                  </datalist>
+                </div>
 
-         
+                <div className='flex flex-col mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow  mt-1'>Número de documento</h2>
+                  <input 
+                    type="text" 
+                    className='text-sm lg:text-lg text-blue-app pl-2 py-1 border-2 rounded-2xl'
+                    name='document'
+                    value={bookingState.document}
+                    onChange={bookingStateChange}
+                  />
+                </div>
+                <div className='flex items-center border-b mb-4 pr-5'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Aceptar terminos y condiciones</h2>
+                  <input 
+                    type="checkbox" 
+                    className='w-6 h-6 bg-blue-app '
+                    name='babyChair'
+                    value={bookingState.babyChair}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                </div>
+              </motion.div>
+            )}
 
-          <div className='flex '>
-            <button 
-              className='flex-grow'
-              onClick={() =>{
-                if(formStep === 2 || formStep === 3){
-                  return prevStep();
-                }
-                return setSearchInput("")
-              }}
-            >
-              <span className='text-sm lg:text-lg cursor-pointer'>
-                Cancelar
-              </span>
-            </button>
-            <button 
-              className='flex-grow text-blue-app border-2 border-blue-app rounded-full '
-              onClick={() => {
-                if(formStep === 3){
-                  return search()
-                }
-                return nextStep()
-              }}
-            >
-              <span className='text-sm lg:text-lg cursor-pointer'>
-               {formStep === 2 ?  ("Continuar") : ("Reservar") }
-              </span>
-            </button>
-          </div>
 
-        </motion.div>
-      </div>
+            <div className='flex '>
+              <button 
+                className='flex-grow'
+                onClick={() =>{
+                  if(formStep === 2 || formStep === 3){
+                    return prevStep();
+                  }
+                  return setSearchInput("")
+                }}
+              >
+                <span className='text-sm lg:text-lg cursor-pointer'>
+                  Cancelar
+                </span>
+              </button>
+              <button 
+                className='flex-grow text-blue-app border-2 border-blue-app rounded-full '
+                onClick={() => {
+                  if(formStep === 3){
+                    return search()
+                  }
+                  return nextStep()
+                }}
+              >
+                <span className='text-sm lg:text-lg cursor-pointer'>
+                {formStep === 2 ?  ("Continuar") : ("Reservar") }
+                </span>
+              </button>
+            </div>
+
+          </motion.div>
+
+
+        </div>
       )}
 
     </header>
