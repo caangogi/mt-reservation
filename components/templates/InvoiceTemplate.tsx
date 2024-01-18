@@ -26,10 +26,11 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
             }
   
             main {
-              max-width: 800px;
-              margin: 0 auto;
-              min-height: 100vh;
-              padding-top: 3rem;
+                display: block;
+                width: 100vw;
+                margin: 0 auto;
+                height: fit-content;
+                padding: 3rem 1.5rem;
             }
   
             header {
@@ -49,7 +50,6 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
                 display: flex;
                 max-width: 150px;
             }
-
         
             .logo-image {
                 width: 100px; 
@@ -105,7 +105,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
             th, td {
               padding: 10px;
               text-align: left;
-              border-left: 2px solid #ddd;
+              border: 1px solid #ddd;
             }
 
             th{
@@ -121,6 +121,86 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
               margin-top: 20px;
               background-color: #e0e0e0;
               padding: 2rem;
+            }
+
+            @media (max-width: 600px) {
+                main {
+                    padding: 1rem 1.5rem;
+                }
+      
+                header {
+                    margin-bottom: 5px;
+                }
+                
+                .header-container {
+                    margin-top: 5px;
+                    gap: 1rem;
+                }
+            
+                .logo-container {
+                    max-width: 50px;
+                }
+            
+                .logo-image {
+                    width: 100%; 
+                }
+            
+                .header-info-container {
+                    display: block;
+                    text-align: left;
+                }
+
+                .header-info-container p{
+                    font-size: .5rem;
+                }
+    
+                .title-container{
+                    height: 1rem;
+                    margin-bottom: 15px;
+                }
+                
+                .title{
+                    font-size: 1rem;
+                }
+            
+               
+                .grid-container {
+                    margin-bottom: .5rem;
+                }
+
+                .grid-item {
+                    padding: 5px;
+                }
+                .grid-item h2 {
+                    font-size: .5rem;
+                }
+
+              
+                table {
+                  margin-bottom: 5px;
+                }
+      
+                th, td {
+                  padding: 5px;
+                  font-size: .7rem;
+                }
+    
+                th{
+                    background-color: #e0e0e0;
+                }
+      
+                .client-info {
+                  margin-bottom: 10px;
+                }
+
+                .client-info h2 {
+                  font-size: .7rem;
+                }
+
+                .client-info p{
+                    font-size: .7rem;
+                }
+      
             }
           </style>
         </head>
@@ -164,7 +244,6 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
 
             <div class="client-info">
               <h2><strong>Datos del Cliente</strong></h2>
-              <br/>
               <p><strong>Nombre:</strong> ${roadMapProps.client.name} ${roadMapProps.client.lastName}</p>
               <p><strong>Tipo de Documento:</strong> ${roadMapProps.client.documentType}</p>
               <p><strong>Número de Documento:</strong> ${roadMapProps.client.documentID}</p>
