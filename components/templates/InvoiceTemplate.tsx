@@ -200,6 +200,12 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
                 .client-info p{
                     font-size: .7rem;
                 }
+                
+                .footer p{
+                    font-size: .7rem;
+                }
+
+
       
             }
           </style>
