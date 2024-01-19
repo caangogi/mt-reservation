@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
 import { AuthProvider } from '../context/auth';
+import { Toaster } from 'react-hot-toast';
 
 const progress = new ProgressBar({
   size: 4,
@@ -18,6 +19,7 @@ function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
       <Component {...pageProps} />
+      <Toaster />
     </AuthProvider>
   )
 }

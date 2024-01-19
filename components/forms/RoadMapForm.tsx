@@ -1,5 +1,4 @@
 import React, {useState} from 'react'
-import withAuth from '../hooks/WithAuth';
 import { RoadMap } from "../../backend/road-map/aplication/Roadmap";
 import { RoadMapProps } from "../../backend/road-map/domain/types"; 
 import { User } from '../../backend/share/types';
@@ -8,6 +7,9 @@ import { municipios } from '../data/MarllorcaMunicipios';
 import GreatLoader from '../loaders/GreatLoader';
 import { useAuth } from '../../context/auth';
 import generateInvoiceNumber from '../../utils/generateAutoIncremental';
+import { generatePDF } from '../../utils/generatePdf';
+import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
+import toast from 'react-hot-toast';
 
 const RoadMapForm = () => {
   const { currentUser } = useAuth();
@@ -29,7 +31,8 @@ const RoadMapForm = () => {
     passengers: 0,
     price: 0,
     driverId: currentUser?.uid,
-    invoiceNumber: ""
+    invoiceNumber: "",
+    invoiceUrl: "",
   });
 
   const handleInputChange = (
@@ -62,16 +65,18 @@ const RoadMapForm = () => {
   
     try {
       
-      const { invoiceNumber } = await generateInvoiceNumber();
       const roadMapInstance = new RoadMap();
+      const { invoiceNumber } = await generateInvoiceNumber();
+      const pdf = await generatePDF({...formData, invoiceNumber})
+      const url: any = await uploadPdfToStorage(pdf, formData.id)
+
       await roadMapInstance.create({
         ...formData, 
         invoiceNumber, 
-        id: uuidv4()
+        id: formData.id, 
+        invoiceUrl: url
       });
 
-  
-    
       setFormData({
         id: '', 
         client: {
@@ -89,16 +94,17 @@ const RoadMapForm = () => {
         passengers: 0,
         price: 0,
         driverId: currentUser?.uid,
-        invoiceNumber: ""
+        invoiceNumber: "",
+        invoiceUrl: ''
       });
-  
       setLoading(false);
+      toast.success('Factura creada')
+
     } catch (error) {
       setLoading(false);
-      console.error(error);
+      toast.error('ups, algo ha ido mal. Intentelo nuevamente')
     }
   };
-  
 
   return (
     <form

@@ -11,4 +11,5 @@ export type RoadMapProps = {
     price: number;
     driverId?: string;
     invoiceNumber: string;
+    invoiceUrl: string
 }
