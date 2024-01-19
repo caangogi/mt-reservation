@@ -3,12 +3,12 @@ import { InvoiceTemplate } from '../components/templates/InvoiceTemplate';
 import jsPDF from 'jspdf';  
 import html2canvas from 'html2canvas';
 
-export const generatePDF = async (roadMapProps: RoadMapProps) => {
+export const generatePDF = async (template: string) => {
     try {
         
-        const invoiceTemplate = InvoiceTemplate(roadMapProps);
+       
         const tempDiv = document.createElement('div');
-        tempDiv.innerHTML = invoiceTemplate;
+        tempDiv.innerHTML = template;
         document.body.appendChild(tempDiv);
     
         await new Promise(resolve => setTimeout(resolve, 500));

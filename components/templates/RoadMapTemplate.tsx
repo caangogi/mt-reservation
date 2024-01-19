@@ -2,7 +2,7 @@ import { RoadMapProps } from "../../backend/road-map/domain/types"
 import { User } from "../../backend/share/types";
 import { formatterEuro } from "../../utils/formatEur";
 
-export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
+export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
 
     const timestamp = roadMapProps.date instanceof Date
     ? roadMapProps.date
@@ -229,23 +229,23 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                         <p>Calle Music Baltasar Samper, 2B 3-1</p>
                         <p>07008 Palma de Mallorca</p>
                         <p>ILLES BALEARS</p>
-                        <p>info@mrjhonytransfer.com</p>
+                        <p>santiagosbus@gmail.com</p>
                     </div>
                 </div>
             </header>
             
             <div class="title-container">
-                <h1 class="title">FACTURA SIMPLIFICADA</h1>
+                <h1 class="title">HOJA DE RUTA</h1>
             </div>
 
             <div class="grid-container">
                 <div class="grid-item">
-                    <h2>Nº Factura: </h2>
-                    <h2> ${roadMapProps.invoiceNumber} </h2>
+                    <h2>Matrícula Vehiculo Renault </h2>
+                    <h2> 5817FTT </h2>
                 </div>
                
                 <div class="grid-item">
-                    <h2>Fecha Factura:</h2>
+                    <h2>Fecha:</h2>
                     <h2> ${date} / ${time}</h2>
                 </div>
             </div>
@@ -253,7 +253,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
             <div class="client-info">
               <h2><strong>Datos del Cliente</strong></h2>
             </div>
-
+  
             <table>
               <thead>
                 <tr>
@@ -272,66 +272,65 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                   <td>${roadMapProps.client.phone}</td>
                   <td>${roadMapProps.client.email}</td>
                 </tr>
+               
               </tbody>
             </table>
 
             <div class="client-info">
-              <h2><strong>Datos del Servcio</strong></h2>
+              <h2><strong>Datos del Servicio</strong></h2>
             </div>
 
             <table>
-            <thead>
-              <tr>
-                <th>Origen</th>
-                <th>Destino</th>
-                <th>Pasajeros</th>
-                <th>Servicio contratado</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${roadMapProps.origin}</td>
-                <td>${roadMapProps.destination}</td>
-                <td>${roadMapProps.passengers}</td>
-                <td>${roadMapProps.contractedService}</td>
-              </tr>
-             
-            </tbody>
-          </table>
+              <thead>
+                <tr>
+                  <th>Origen</th>
+                  <th>Destino</th>
+                  <th>Pasajeros</th>
+                  <th>Servicio contratado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${roadMapProps.origin}</td>
+                  <td>${roadMapProps.destination}</td>
+                  <td>${roadMapProps.passengers}</td>
+                  <td>${roadMapProps.contractedService}</td>
+                </tr>
+               
+              </tbody>
+            </table>
 
-          <div class="client-info">
-            <h2><strong>Datos de pago</strong></h2>
-          </div>
+            <div class="client-info">
+              <h2><strong>Datos de pago</strong></h2>
+            </div>
 
-          <table>
-            <thead>
-              <tr>
-                <th>Metodo de pago</th>
-                <th>Base imponible</th>
-                <th>10% IVA</th>
-                <th>Total</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>${roadMapProps.paymentMethod}</td>
-                <td>${formatterEuro.format(roadMapProps.price)}</td>
-                <td>${formatterEuro.format(iva)}</td>
-                <td>${formatterEuro.format(total)}</td>
-              </tr>
-             
-            </tbody>
-          </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Metodo de pago</th>
+                  <th>Base imponible</th>
+                  <th>10% IVA</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${roadMapProps.paymentMethod}</td>
+                  <td>${formatterEuro.format(roadMapProps.price)}</td>
+                  <td>${formatterEuro.format(iva)}</td>
+                  <td>${formatterEuro.format(total)}</td>
+                </tr>
+               
+              </tbody>
+            </table>
   
-          <div class="footer">
-            <p>Conductor: ${driver.name} ${driver.lastName}</p>
-            <p>Documento: ${driver.documentID}</p>
-            <p>Teléfono: ${driver.phone}</p>
-            <p>Matrícula del Vehiculo: 5817FTT </p>
-            <p>Mallorca Transfer 2023 SL</p>
-            <p>Gracias por elegir nuestros servicios.</p>
-          </div>
-
+            <div class="footer">
+              <p>Conductor: ${driver.name} ${driver.lastName}</p>
+              <p>Documento: ${driver.documentID}</p>
+              <p>Teléfono: ${driver.phone}</p>
+              <p>Mallorca Transfer 2023 SL</p>
+              <p>Gracias por elegir nuestros servicios.</p>
+            </div>
           </main>
         </body>
       </html>

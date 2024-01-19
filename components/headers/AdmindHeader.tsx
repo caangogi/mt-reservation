@@ -47,7 +47,7 @@ const Header = () => {
           className=" text-blue-app hover:underline cursor-pointer"
           onClick={handleLogout}
         >
-          Logout
+          Salir
         </button>
       </div>
     </div>

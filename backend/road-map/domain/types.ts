@@ -6,10 +6,12 @@ export type RoadMapProps = {
     date: Date | Timestamp; 
     origin: string; 
     destination: string;
+    contractedService: string;
     serviceType: string;
     passengers: number;
     price: number;
     driverId?: string;
     invoiceNumber: string;
-    invoiceUrl: string
+    invoiceUrl: string;
+    paymentMethod: string;
 }

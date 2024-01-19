@@ -7,12 +7,13 @@ import { municipios } from '../data/MarllorcaMunicipios';
 import GreatLoader from '../loaders/GreatLoader';
 import { useAuth } from '../../context/auth';
 import generateInvoiceNumber from '../../utils/generateAutoIncremental';
+import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 import { generatePDF } from '../../utils/generatePdf';
 import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
 import toast from 'react-hot-toast';
 
 const RoadMapForm = () => {
-  const { currentUser } = useAuth();
+  const { currentUser, userProfile } = useAuth();
   const [loading, setLoading] = useState<boolean>(false)
   const [formData, setFormData] = useState<RoadMapProps>({
     id: uuidv4(),
@@ -22,14 +23,17 @@ const RoadMapForm = () => {
       documentType: '',
       documentID: '',
       phone: '',
+      email: '',
       type: 'guest'
     },
     date: new Date(),
     origin: '',
     destination: '',
     serviceType: '',
+    contractedService: '',
     passengers: 0,
     price: 0,
+    paymentMethod: "",
     driverId: currentUser?.uid,
     invoiceNumber: "",
     invoiceUrl: "",
@@ -67,7 +71,8 @@ const RoadMapForm = () => {
       
       const roadMapInstance = new RoadMap();
       const { invoiceNumber } = await generateInvoiceNumber();
-      const pdf = await generatePDF({...formData, invoiceNumber})
+      const roadMapTemplate = RoadMapTemplate({...formData, invoiceNumber}, userProfile);
+      const pdf = await generatePDF(roadMapTemplate)
       const url: any = await uploadPdfToStorage(pdf, formData.id)
 
       await roadMapInstance.create({
@@ -85,18 +90,22 @@ const RoadMapForm = () => {
           documentType: '',
           documentID: '',
           phone: '',
+          email: '',
           type: 'guest',
         },
         date: new Date(),
         origin: '',
         destination: '',
         serviceType: '',
+        contractedService: '',
         passengers: 0,
+        paymentMethod: '',
         price: 0,
         driverId: currentUser?.uid,
         invoiceNumber: "",
-        invoiceUrl: ''
+        invoiceUrl: '',
       });
+
       setLoading(false);
       toast.success('Factura creada')
 
@@ -190,6 +199,20 @@ const RoadMapForm = () => {
               className="w-full px-3 py-2 border rounded-md"
             />
           </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Email:
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.client.email}
+              onChange={(e) => handleClientChange(e, 'email')}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+          </div>
+
         </div>
 
         <div className='border p-4 rounded-md'>
@@ -234,6 +257,24 @@ const RoadMapForm = () => {
 
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
+              Servicio contratado
+            </label>
+            <input
+              type="text"
+              name="contractedService"
+              list='contractedService'
+              value={formData.contractedService}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+            <datalist id='contractedService'>
+                <option value="Traslado"></option>
+                <option value="Excursión"></option>
+                <option value="Disponibilidad"></option>
+              </datalist>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
               Tipo de servicio:
             </label>
             <input
@@ -249,7 +290,7 @@ const RoadMapForm = () => {
                 <option value="DR"></option>
                 <option value="SPREG"></option>
                 <option value="TUR"></option>
-              </datalist>
+            </datalist>
           </div>
 
           <div className="mb-4">
@@ -264,6 +305,25 @@ const RoadMapForm = () => {
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Metodo de pago
+            </label>
+            <input
+              type="text"
+              name="paymentMethod"
+              list='paymentMethods'
+              value={formData.paymentMethod}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+            <datalist id='paymentMethods'>
+              <option value="Efectivo">Efectivo</option>
+              <option value="Tarjeta">Tarjeta</option>
+              <option value="Transferencia bancaria">Transferencia bancaria</option>
+            </datalist>
           </div>
 
           <div className="mb-4">

@@ -7,6 +7,7 @@ export type User = {
     documentType: string;
     documentID: string;
     phone: string;
+    email: string;
     type: UserType;
 };
 
