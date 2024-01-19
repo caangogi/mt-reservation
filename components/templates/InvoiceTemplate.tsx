@@ -1,5 +1,5 @@
 import { RoadMapProps } from "../../backend/road-map/domain/types"
-
+import { formatterEuro } from "../../utils/formatEur";
 export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
 
     const timestamp = roadMapProps.date instanceof Date
@@ -12,6 +12,8 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
     const sum = (num1: number, num2:number): number => num1 + num2;
     const iva: number = roadMapProps.price * 0.1;
     const total = sum(Number(roadMapProps.price), Number(iva))
+
+   
 
     return `
       <!DOCTYPE html>
@@ -52,7 +54,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
             }
         
             .logo-image {
-                width: 100px; 
+                width: 200px; 
                 height: auto;
             }
         
@@ -272,9 +274,9 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
                   <td>${roadMapProps.origin}</td>
                   <td>${roadMapProps.destination}</td>
                   <td>${roadMapProps.passengers}</td>
-                  <td>${roadMapProps.price}€</td>
-                  <td>${iva}€</td>
-                  <td>${total}€</td>
+                  <td>${formatterEuro.format(roadMapProps.price)}</td>
+                  <td>${formatterEuro.format(iva)}</td>
+                  <td>${formatterEuro.format(total)}</td>
                 </tr>
                
               </tbody>

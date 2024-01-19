@@ -172,7 +172,6 @@ const RoadMapForm = () => {
             <input
               type="text"
               name="documentID"
-              inputMode="numeric"
               value={formData.client.documentID}
               onChange={(e) => handleClientChange(e, 'documentID')}
               className="w-full px-3 py-2 border rounded-md"
@@ -294,12 +293,12 @@ const RoadMapForm = () => {
             Guardar hoja de ruta
           </button>
         :
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex w-full"
+          <div
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex justify-center w-full"
           >
             un momento...
             <GreatLoader />
-          </button>
+          </div>
         }
       </div>
     </form>
