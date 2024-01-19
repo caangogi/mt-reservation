@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RoadMapProps } from '../../backend/road-map/domain/types';
 import { formatterEuro } from '../../utils/formatEur';
 
@@ -7,8 +7,32 @@ interface RoadmapTableProps {
 }
 
 const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const filteredRoadmaps = roadmaps.filter((roadmap) => {
+    const clientName = `${roadmap.client.name} ${roadmap.client.lastName}`.toLowerCase();
+    return clientName.includes(searchTerm.toLowerCase());
+  });
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
-    <div className="overflow-x-auto">
+      <div className="overflow-x-auto">
+        <div className="mb-4">
+          <label htmlFor="search" className="sr-only">
+            Search
+          </label>
+          <input
+            type="text"
+            id="search"
+            placeholder="Buscar por nombre de cliente"
+            className="p-2 border border-gray-300 w-72"
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+        </div>
       <table className="min-w-full bg-white border border-gray-300">
         <thead>
           <tr>
@@ -25,7 +49,7 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
           </tr>
         </thead>
         <tbody>
-          {roadmaps.map((roadmap) => {
+          {filteredRoadmaps.map((roadmap) => {
 
             const timestamp = roadmap.date instanceof Date
             ? roadmap.date

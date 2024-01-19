@@ -127,7 +127,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
 
             @media (max-width: 600px) {
                 main {
-                    padding: 1rem 1.5rem;
+                    padding: 1rem;
                 }
       
                 header {
