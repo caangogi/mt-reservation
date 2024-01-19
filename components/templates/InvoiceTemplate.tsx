@@ -54,7 +54,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps) => {
             }
         
             .logo-image {
-                width: 200px; 
+                width: 100px; 
                 height: auto;
             }
         
