@@ -9,10 +9,27 @@ interface RoadmapTableProps {
 const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
 
   const [searchTerm, setSearchTerm] = useState('');
-  const filteredRoadmaps = roadmaps.filter((roadmap) => {
-    const clientName = `${roadmap.client.name} ${roadmap.client.lastName}`.toLowerCase();
-    return clientName.includes(searchTerm.toLowerCase());
-  });
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+
+   const filteredRoadmaps = roadmaps
+    .filter((roadmap) => {
+      const clientName = `${roadmap.client.name} ${roadmap.client.lastName}`.toLowerCase();
+      return clientName.includes(searchTerm.toLowerCase());
+    })
+    .sort((a, b) => {
+      const priceA = a.price;
+      const priceB = b.price;
+
+      if (sortOrder === 'asc') {
+        return priceA - priceB;
+      } else {
+        return priceB - priceA;
+      }
+    });
+
+    const handleSortClick = () => {
+      setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+    };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -44,7 +61,15 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
             <th className="py-2 px-4 border text-start">Destino</th>
             <th className="py-2 px-4 border text-start">Servicio</th>
             <th className="py-2 px-4 border text-start">Pasajeros</th>
-            <th className="py-2 px-4 border text-start">Precio</th>
+            <th className="py-2 px-4 border text-start flex justify-between">
+              Precio
+              <button
+                className="text-blue-500"
+                onClick={handleSortClick}
+              >
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </th>
             <th className="py-2 px-4 border text-start">Acciones</th>
           </tr>
         </thead>
