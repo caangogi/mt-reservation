@@ -9,6 +9,10 @@ import LargeCard from '../components/cards/LargeCard';
 import WhatsAppButton from '../components/buttons/WhatsAppButton';
 import {DataTransfer} from '../components/data/TarifasTransporte';
 import {CardsData} from '../components/data/MediumCardsData'
+import BusesSection from '../components/home_sections/BusesSection'
+import ServicesSection from '../components/home_sections/ServicesSections'
+import CTASection from '../components/home_sections/CTASection'
+import ReservaSection from '../components/home_sections/ReservaSection'
 
 export default function Home({exploreData, cardsDate}) {
 
@@ -26,7 +30,6 @@ export default function Home({exploreData, cardsDate}) {
         set_cardsData(combinedData);
     }, []);
 
-    
   return (
     <div>
         <Head>
@@ -37,17 +40,16 @@ export default function Home({exploreData, cardsDate}) {
         <Header />
         <Banner />
         
-        <main className='max-w-7xl mx-auto px-8 sm:px-16 flex flex-col gap-20'>
+        <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
 
-            <section className='pt-6'>
-                <h2 className='text-4xl font-semibold'>Explora Mallorca</h2>
-                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-                    {_cardsData?.map((item, key) => (
-                        <SmallCard key={key} img={item.img} location={item.name} price={item.price} />
-                    ))}
-                </div>
-            </section>
+            <BusesSection />
 
+            <CTASection />
+
+            <ServicesSection />
+
+            <ReservaSection />
+            
             <section>
                 <h2 className='text-4xl font-semibold'>Lugares que visitar en Mallorca</h2>
                 <div className='flex justify-between space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
