@@ -38,6 +38,9 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
             header {
                 text-align: center;
                 margin-bottom: 20px;
+                display: flex;
+                justify-content: space-between;
+                gap: 2rem;
             }
             
             .header-container {
@@ -63,6 +66,10 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 text-align: left;
             }
 
+            .header-column-items{
+              pading: 2px;
+              background-color: #fff;
+            }
 
             .title-container{
                 display: flex;
@@ -155,6 +162,11 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 .header-info-container p{
                     font-size: .5rem;
                 }
+
+                .header-column-items{
+                  pading: 2px;
+                  background-color: #fff;
+                }
     
                 .title-container{
                     height: 1rem;
@@ -232,60 +244,39 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                         <p>santiagosbus@gmail.com</p>
                     </div>
                 </div>
+
+                <div class="header-container">
+                  <div class="header-info-container">
+                    <div>
+                      <p><strong>Datos del cliente</strong></p>
+                    </div>
+                    <div>
+                      <div>
+                        <p> <strong> Nombre: </strong> ${roadMapProps.client.name} ${roadMapProps.client.lastName}  </p> 
+                      </div>
+                      <div>
+                        <p> <strong>Documento: </strong> ${roadMapProps.client.documentType}: ${roadMapProps.client.documentID}  </p> 
+                      </div>
+                      <div>
+                        <p> <strong>Télefono: </strong> ${roadMapProps.client.phone} </p> 
+                      </div>
+                      <div>
+                        <p> <strong>Email:</strong> ${roadMapProps.client.email} </p> 
+                      </div>
+                      <div>
+                        <p> <strong>Fecha: </strong> ${date} / ${time} </p> 
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+               
+
             </header>
             
             <div class="title-container">
                 <h1 class="title">HOJA DE RUTA</h1>
             </div>
-
-            <div class="grid-container">
-                <div class="grid-item">
-                    <h2>Matrícula Vehiculo Renault </h2>
-                    <h2> 5817FTT </h2>
-                </div>
-               
-                <div class="grid-item">
-                    <h2>Fecha:</h2>
-                    <h2> ${date} / ${time}</h2>
-                </div>
-            </div>
-
-            <div class="client-info">
-              <h2><strong>Datos del Cliente</strong></h2>
-            </div>
-  
-            <table>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Tipo de documento</th>
-                  <th>Documento</th>
-                  <th>Télefono</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>${roadMapProps.client.name} ${roadMapProps.client.lastName}</td>
-                  <td>${roadMapProps.client.documentType}</td>
-                  <td>${roadMapProps.client.documentID}</td>
-                  <td>${roadMapProps.client.phone}</td>
-                </tr>
-               
-              </tbody>
-            </table>
-            <table>
-              <thead>
-                <tr>
-                  <th>Email</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>${roadMapProps.client.email}</td>
-                </tr>
-               
-              </tbody>
-            </table>
 
             <div class="client-info">
               <h2><strong>Datos del Servicio</strong></h2>
@@ -339,6 +330,7 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               <p>Conductor: ${driver.name} ${driver.lastName}</p>
               <p>Documento: ${driver.documentID}</p>
               <p>Teléfono: ${driver.phone}</p>
+              <p>Matrícula Vehiculo Renault: 5817FTT </p>
               <p>Mallorca Transfer 2023 SL</p>
               <p>Gracias por elegir nuestros servicios.</p>
             </div>
