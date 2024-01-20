@@ -231,7 +231,7 @@ function Header({placeholder}) {
       {searchInput && (
         <div className='flex justify-center'>
 
-          <motion.div 
+         {/*  <motion.div 
             className={styles.steps_container}
             initial={{ x: -50, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -242,10 +242,10 @@ function Header({placeholder}) {
           >
             <div className={styles.steps_content}>
 
-
+                <h1>Hola !!</h1>
 
             </div>
-          </motion.div>
+          </motion.div> */}
 
 
 

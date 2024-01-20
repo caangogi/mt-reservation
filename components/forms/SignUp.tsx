@@ -56,6 +56,7 @@ const SignupForm: React.FC = () => {
           <label className="block mb-2">Email:</label>
           <input
             type="email"
+            name='email'
             value={user.email}
             onChange={handleInputChange}
             className="w-full px-3 py-2 border rounded-md mb-4"
