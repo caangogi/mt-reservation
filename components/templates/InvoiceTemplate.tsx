@@ -122,7 +122,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               text-align: center;
               margin-top: 20px;
               background-color: #e0e0e0;
-              padding: 2rem;
+              padding: 1rem;
             }
 
             @media (max-width: 600px) {
@@ -206,9 +206,6 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 .footer p{
                     font-size: .7rem;
                 }
-
-
-      
             }
           </style>
         </head>
@@ -258,7 +255,6 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               <thead>
                 <tr>
                   <th>Nombre</th>
-                  <th>Tipo de documento</th>
                   <th>Documento</th>
                   <th>Télefono</th>
                   <th>Email</th>
@@ -267,8 +263,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               <tbody>
                 <tr>
                   <td>${roadMapProps.client.name} ${roadMapProps.client.lastName}</td>
-                  <td>${roadMapProps.client.documentType}</td>
-                  <td>${roadMapProps.client.documentID}</td>
+                  <td>${roadMapProps.client.documentType} ${roadMapProps.client.documentID}</td>
                   <td>${roadMapProps.client.phone}</td>
                   <td>${roadMapProps.client.email}</td>
                 </tr>
@@ -286,6 +281,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 <th>Destino</th>
                 <th>Pasajeros</th>
                 <th>Servicio contratado</th>
+                <th>Tipo de servicio</th>
               </tr>
             </thead>
             <tbody>
@@ -294,6 +290,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 <td>${roadMapProps.destination}</td>
                 <td>${roadMapProps.passengers}</td>
                 <td>${roadMapProps.contractedService}</td>
+                <td>${roadMapProps.serviceType}</td>
               </tr>
              
             </tbody>

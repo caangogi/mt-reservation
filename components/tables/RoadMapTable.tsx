@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '../../services/FirebaseService';
+import { db, storage } from '../../services/FirebaseService';
 import { RoadMapProps } from '../../backend/road-map/domain/types';
 import { formatterEuro } from '../../utils/formatEur';
 import toast from 'react-hot-toast';
@@ -8,6 +8,9 @@ import GreatLoader from '../loaders/GreatLoader';
 import { generatePDF } from '../../utils/generatePdf';
 import { InvoiceTemplate } from '../templates/InvoiceTemplate';
 import { useAuth } from '../../context/auth';
+import { BiSolidFilePdf } from "react-icons/bi";
+import { GiRoad } from "react-icons/gi";
+import { MdDeleteForever } from "react-icons/md";
 
 interface RoadmapTableProps {
   roadmaps: RoadMapProps[];
@@ -19,7 +22,10 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [editableInvoiceId, setEditableInvoiceId] = useState<string | null>(null);
   const [newInvoiceNumber, setNewInvoiceNumber] = useState<string>();
-  const [loading, setLoading] = useState<boolean>(false)
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
+
+
   const filteredRoadmaps = roadmaps.filter((roadmap) => {
     const clientName = `${roadmap.client.name} ${roadmap.client.lastName}`.toLowerCase();
     return clientName.includes(searchTerm.toLowerCase());
@@ -30,10 +36,9 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
   };
 
   const handleInvoiceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Aquí puedes manejar la lógica para actualizar el valor de la factura en tu estado o realizar una acción de actualización.
-   /*  console.log(`Nuevo valor de factura: ${event.target.value}`); */
    setNewInvoiceNumber(event.target.value)
   };
+
   const handleInvoiceClick = (invoiceId: any, invoiceNumber: any) => {
     setNewInvoiceNumber(invoiceNumber)
     setEditableInvoiceId(invoiceId);
@@ -53,7 +58,31 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
       toast.error('Ups, algo ha ido mal. Intentalo de nuevo.')
       setLoading(false);
       console.error('Error al actualizar el número de factura:', error);
-      // Manejar el error de alguna manera
+    }
+  };
+
+  const handleButtonClick = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleDelete = async (roadMapId: string | any) => {
+    setLoading(true)
+    try {
+
+      await db.collection('road-maps').doc(roadMapId).delete();
+      await storage.ref(`invoices/${roadMapId}`).delete();
+
+      toast.success('Factura eliminada correctamente');
+      setLoading(false);
+      handleModalClose();
+    } catch (error) {
+      toast.error('Ups, ha ocurrido algo inesperado. Intentalo nuevamente.')
+      setLoading(false);
+      console.error('Error al eliminar el elemento:', error);
     }
   };
 
@@ -77,10 +106,9 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
           <tr>
             <th className="py-2 px-4 border text-start">Factura</th>
             <th className="py-2 px-4 border text-start">Nombre</th>
-            <th className="py-2 px-4 border text-start">Fecha</th>
-            <th className="py-2 px-4 border text-start">Hora</th>
             <th className="py-2 px-4 border text-start">Origen</th>
             <th className="py-2 px-4 border text-start">Destino</th>
+            <th className="py-2 px-4 border text-start">Fecha</th>
             <th className="py-2 px-4 border text-start">Servicio</th>
             <th className="py-2 px-4 border text-start">Pasajeros</th>
             <th className="py-2 px-4 border text-start flex justify-between">Precio</th>
@@ -97,85 +125,135 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
             const date = timestamp.toLocaleDateString();
             const time = timestamp.toLocaleTimeString();
             return(
-            <tr key={roadmap.id}>
-              <td className="py-2 px-4 border text-start">
-                  {editableInvoiceId === roadmap.id ? (
-                    <div className='flex flex-col'> 
-                      <div className='flex justify-around'>
-                        <input
-                          type="text"
-                          value={editableInvoiceId === null ? roadmap.invoiceNumber : newInvoiceNumber }
-                          onChange={handleInvoiceChange}
-                        />
-                        <span 
-                          className='cursor-pointer border p-1 text-red-600 rounded-full bg-red-200 hover:bg-red-600 hover:text-red-50'
-                          onClick={() => setEditableInvoiceId(null)}
+              <>
+                <tr key={roadmap.id}>
+                  <td className="py-2 px-4 border text-start">
+                      {editableInvoiceId === roadmap.id ? (
+                        <div className='flex flex-col'> 
+                          <div className='flex justify-around'>
+                            <input
+                              type="text"
+                              value={editableInvoiceId === null ? roadmap.invoiceNumber : newInvoiceNumber }
+                              onChange={handleInvoiceChange}
+                            />
+                            <span 
+                              className='cursor-pointer border p-1 text-red-600 rounded-full bg-red-200 hover:bg-red-600 hover:text-red-50'
+                              onClick={() => setEditableInvoiceId(null)}
+                            >
+                              X
+                            </span>
+                          </div>
+
+                          {loading ?
+                            <div
+                              className=" bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-md w-full mt-1"
+                            >
+                              <GreatLoader />
+                            </div> 
+                          : 
+                          <button
+                            className=" bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-md w-full mt-1"
+                            onClick={() => updateInvoiceNumber(roadmap.id, newInvoiceNumber)}
+                          >
+                            Actualizar
+                          </button> 
+                          }
+                        </div>
+                      ) : (
+                        <span
+                          className="cursor-pointer"
+                          onClick={() => handleInvoiceClick(roadmap.id, roadmap.invoiceNumber)}
                         >
-                          X
+                          {roadmap.invoiceNumber}
                         </span>
-                      </div>
+                      )}
+                  </td>
+                  <td className="py-2 px-4 border text-start">{`${roadmap.client.name} ${roadmap.client.lastName}`}</td>
+                  <td className="py-2 px-4 border text-start">{roadmap.origin}</td>
+                  <td className="py-2 px-4 border text-start">{roadmap.destination}</td>
+                  <td className="py-2 px-4 border text-start">{date} / {time}</td>
+                  <td className="py-2 px-4 border text-start">{roadmap.serviceType}</td>
+                  <td className="py-2 px-4 border text-end">{roadmap.passengers}</td>
+                  <td className="py-2 px-4 border text-end">{formatterEuro.format(roadmap.price)}</td>
+                  <td className="py-2 px-2 border text-start flex justify-center gap-1 w-fit">
 
-                      {loading ?
-                        <div
-                          className=" bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-md w-full mt-1"
-                        >
-                          <GreatLoader />
-                        </div> 
-                      : 
+                    <div className=' flex flex-col justify-center text-center'>
                       <button
-                        className=" bg-green-400 hover:bg-green-500 text-white font-bold py-1 px-4 rounded-md w-full mt-1"
-                        onClick={() => updateInvoiceNumber(roadmap.id, newInvoiceNumber)}
+                          className=" bg-green-600 hover:bg-green-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                          onClick={() =>{
+                              const invoiceTemplate = InvoiceTemplate(roadmap, userProfile);
+                              generatePDF(invoiceTemplate)
+                            }
+                          }
                       >
-                        Actualizar
-                      </button> 
-                      }
-                    </div>
-                  ) : (
-                    <span
-                      className="cursor-pointer"
-                      onClick={() => handleInvoiceClick(roadmap.id, roadmap.invoiceNumber)}
-                    >
-                      {roadmap.invoiceNumber}
-                    </span>
-                  )}
-              </td>
-              <td className="py-2 px-4 border text-start">{`${roadmap.client.name} ${roadmap.client.lastName}`}</td>
-              <td className="py-2 px-4 border text-start">{date}</td>
-              <td className="py-2 px-4 border text-start">{time}</td>
-              <td className="py-2 px-4 border text-start">{roadmap.origin}</td>
-              <td className="py-2 px-4 border text-start">{roadmap.destination}</td>
-              <td className="py-2 px-4 border text-start">{roadmap.serviceType}</td>
-              <td className="py-2 px-4 border text-end">{roadmap.passengers}</td>
-              <td className="py-2 px-4 border text-end">{formatterEuro.format(roadmap.price)}</td>
-              <td className="py-2 px-2 border text-start flex justify-center gap-1 w-fit">
+                        <BiSolidFilePdf />
 
-              <button
-                    className="bg-red-400 hover:bg-red-600 text-white font-bold p-1 rounded-md w-fit"
-                    onClick={() =>{
-                        const invoiceTemplate = InvoiceTemplate(roadmap, userProfile);
-                        generatePDF(invoiceTemplate)
-                      }
-                    }
-                >
-                  Facturar
-                </button>
-                <a
-                    href={roadmap.invoiceUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                >
+                      </button>
+                      <p className=" text-xs ">Facturar</p>
+                    </div>
+
+                  <div className=' flex flex-col justify-center text-center'>
+                      <a
+                            href={roadmap.invoiceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <button
+                                className=" bg-blue-600 hover:bg-blue-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                            >
+                                <GiRoad />
+                            </button>
+                        </a>
+                      <p className=" text-xs ">Ruta</p>
+                  </div>
+                    
+                  <div className=' flex flex-col justify-center text-center'>
                     <button
-                        className=" bg-blue-600 hover:bg-blue-400 text-white font-bold p-1 rounded-md w-fit"
-                    >
-                        Hoja de ruta
+                          className="bg-red-600 hover:bg-red-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                          onClick={handleButtonClick}
+                      >
+                        <MdDeleteForever />
                     </button>
-                </a>
-              </td>
-            </tr>
+                    <p className=" text-xs ">Eliminar</p>
+                  </div>
+                  </td>
+                </tr>
+                {isModalOpen && (
+                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                      <div className="absolute bg-slate-500 opacity-75 w-full h-full"></div>
+                      <div className="bg-white p-8 rounded shadow-lg z-10">
+                        <p className="mb-4">Estas a punto de eliminar la factura <strong>Nº{roadmap.invoiceNumber}</strong> <br/> ¿Estás seguro que deseas continuar? </p>
+                       {!loading ?
+                        <>
+                          <button
+                            onClick={() => handleDelete(roadmap.id)}
+                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4"
+                          >
+                            Sí, eliminar
+                          </button>
+                          <button
+                            onClick={handleModalClose}
+                            className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                          >
+                            Cancelar
+                          </button>
+                        </>
+                       : 
+                        <>
+                          <p className="mb-4"> Estamos trabajando en ello, un momento...  </p>
+                          <GreatLoader/>
+                        </>
+                       
+                       }
+                      </div>
+                    </div>
+                )}
+              </>
             )
-          } )}
+          })}
         </tbody>
       </table>
+      
     </div>
   );
 };

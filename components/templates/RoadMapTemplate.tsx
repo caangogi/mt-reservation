@@ -227,7 +227,6 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
         <body>
           <main>
             <header>
-               
                 <div class="header-container">
                     <div class="logo-container">
                         <img 
@@ -269,9 +268,6 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                     </div>
                   </div>
                 </div>
-
-               
-
             </header>
             
             <div class="title-container">
@@ -289,6 +285,7 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                   <th>Destino</th>
                   <th>Pasajeros</th>
                   <th>Servicio contratado</th>
+                  <th>Tipo de servicio</th>
                 </tr>
               </thead>
               <tbody>
@@ -297,6 +294,7 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                   <td>${roadMapProps.destination}</td>
                   <td>${roadMapProps.passengers}</td>
                   <td>${roadMapProps.contractedService}</td>
+                  <td>${roadMapProps.serviceType}</td>
                 </tr>
                
               </tbody>
