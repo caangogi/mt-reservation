@@ -261,7 +261,6 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                   <th>Tipo de documento</th>
                   <th>Documento</th>
                   <th>Télefono</th>
-                  <th>Email</th>
                 </tr>
               </thead>
               <tbody>
@@ -270,6 +269,18 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                   <td>${roadMapProps.client.documentType}</td>
                   <td>${roadMapProps.client.documentID}</td>
                   <td>${roadMapProps.client.phone}</td>
+                </tr>
+               
+              </tbody>
+            </table>
+            <table>
+              <thead>
+                <tr>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
                   <td>${roadMapProps.client.email}</td>
                 </tr>
                
