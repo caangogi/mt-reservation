@@ -15,6 +15,7 @@ import Logo from '../public/images/logo_02.png';
 import {motion} from 'framer-motion';
 
 import {db} from '../services/FirebaseService';
+import toast from 'react-hot-toast';
 
 function Header({placeholder}) {
 
@@ -26,6 +27,7 @@ function Header({placeholder}) {
     numOfMiniBags: 0,
     numOfBikes: 0,
     babyChair: false,
+    price: 0,
 
     name: '',
     email: '',
@@ -102,9 +104,9 @@ function Header({placeholder}) {
     key:'selection'
   };
 
-  const search = () =>{
+  const search = async () =>{
 
-    createBooking(bookingState);
+    await createBooking({...bookingState, price:  calcularPrecio(searchInput, bookingState.numOfGuests)  });
 
     router.push({
       pathname: '/search',
@@ -122,13 +124,14 @@ function Header({placeholder}) {
     })
   };
 
-  console.log(bookingState)
 
   const createBooking = async (bookingState) => {
     try {
       const result = await db.collection("bookings").add(bookingState);
+      toast.success('Reserva creada')
       console.log(result)
     } catch (error) {
+      toast.error('Ups, algo ha ido mal creando la reserva. Intentelo de nuevo.')
       console.log(error)
     }
   }

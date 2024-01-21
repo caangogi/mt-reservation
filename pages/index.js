@@ -13,22 +13,9 @@ import BusesSection from '../components/home_sections/BusesSection'
 import ServicesSection from '../components/home_sections/ServicesSections'
 import CTASection from '../components/home_sections/CTASection'
 import ReservaSection from '../components/home_sections/ReservaSection'
+import PlacesSection from '../components/home_sections/PlacesSection'
 
-export default function Home({exploreData, cardsDate}) {
-
-    const [_cardsData, set_cardsData] = useState()
-
-    useEffect(() =>{
-        let combinedData = [];
-        for (let i = 0; i < exploreData.length; i++) {
-        combinedData.push({
-            name: DataTransfer[i].name,
-            img: exploreData[i].img,
-            price: DataTransfer[i].values[0]
-        });
-        }
-        set_cardsData(combinedData);
-    }, []);
+export default function Home() {
 
   return (
     <div>
@@ -49,27 +36,15 @@ export default function Home({exploreData, cardsDate}) {
             <ServicesSection />
 
             <ReservaSection />
-            
-            <section>
-                <h2 className='text-4xl font-semibold'>Lugares que visitar en Mallorca</h2>
-                <div className='flex justify-between space-x-3 overflow-scroll scrollbar-hide p-3 -ml-3'>
-                    {CardsData?.map((item, key) => {
-                        if (key <= 2) return(
-                            <MediumCard 
-                                key={key}
-                                img={item.image}
-                                title={item.title}
-                            />
-                        )
-                    })}
-                </div>
-            </section>
 
+            <PlacesSection />
+            
             <LargeCard 
-                img='https://links.papareact.com/4cj'
+                img='/images/large_card_image.webp'
                 title='¿Inquietudes? Contáctanos por WhatsApp'
                 description="Contáctanos para resolver tus inquietudes"
                 buttonText='Contáctanos por WhatsApp'
+                cta_position='left-12'
             />
 
         </main>
@@ -84,15 +59,3 @@ export default function Home({exploreData, cardsDate}) {
   )
 }
 
-
-export async function getStaticProps() {
-    const exploreData = await fetch("https://www.jsonkeeper.com/b/4G1G").then((res) => res.json());
-    const cardsDate = await fetch("https://www.jsonkeeper.com/b/VHHT").then((res) => res.json())
-    return {
-        props:{
-            exploreData,
-            cardsDate
-        },
-
-    };
-}

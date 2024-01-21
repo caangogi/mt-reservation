@@ -7,11 +7,11 @@ import { useRouter } from 'next/dist/client/router';
 function Search({}) {
 
     const router = useRouter();
-    const {location, startDate, endDate, noOfGuests, noOfBags} = router.query;
+    const {location, startDate, endDate, noOfGuests, noOfBags, price} = router.query;
     const formattedStartDate = new Date(startDate).toLocaleString();
     const formattedEndDate = new Date(endDate).toLocaleString();
     const range = `${formattedStartDate} - ${formattedEndDate}`;
-
+    console.log(price)
   return (
     <div className='h-screen'>
         <Header 
