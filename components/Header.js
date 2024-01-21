@@ -17,7 +17,7 @@ import {motion} from 'framer-motion';
 import {db} from '../services/FirebaseService';
 import toast from 'react-hot-toast';
 
-function Header({placeholder}) {
+function Header({placeholder, setToBooking, toBooking}) {
 
   const [bookingState, setBookingState] = useState({
     startDate: new Date(),
@@ -151,7 +151,7 @@ function Header({placeholder}) {
       <div className='flex flex-col gap-4 justify-around items-center lg:flex-row bg-white p-6 rounded-2xl lg:rounded-full shadow-md'>
         
         <div 
-          className='relative flex items-center gap-3 h-10 cursor-pointer my-auto'
+          className={`relative  items-center gap-3 h-10 cursor-pointer my-auto ${searchInput || toBooking ? 'hidden' : 'flex' }`}
           onClick={() => router.push('/')}
         >
           <Image 
@@ -175,31 +175,19 @@ function Header({placeholder}) {
             {fromOurTo ? (
               <div 
                 onClick={() => setFromOurTo(false)}
-                className='flex items-center gap-4'
+                className='flex justify-center bg-blue-app rounded-full shadow-md  py-1 px-4 lg:p-3'
               >
-                <GiAirplaneArrival 
-                  style={{
-                    fontSize: '2rem',
-                    color: '#00CCFF'
-                  }}
-                />
-                <span  className='text-sm lg:text-lg cursor-pointer'>
-                  Desde el aeropuerto a
+                <span  className='text-sm lg:text-lg cursor-pointer text-white'>
+                  DESDE EL AEROPUERTO HACIA
                 </span>
               </div> 
             ) : (
               <div
                 onClick={() => setFromOurTo(true)}
-                className='flex items-center gap-4'
+                className='flex justify-center bg-blue-app rounded-full shadow-md py-1 px-4 lg:p-3'
               > 
-                <GiAirplaneDeparture
-                  style={{
-                    fontSize: '2rem',
-                    color: '#00CCFF'
-                  }}
-                />
-                <span className='text-sm lg:text-lg cursor-pointer'>
-                  Hacia el aeropuerto desde
+                <span className='text-sm lg:text-lg cursor-pointer text-white'>
+                  HACIA EL AEROPUERTO DESDE
                 </span>
               </div>
             )}
@@ -213,7 +201,7 @@ function Header({placeholder}) {
                 >
                   <option value="" className='text-sm lg:text-lg cursor-pointer'>
                     {
-                      placeholder ? placeholder : fromOurTo ? 'Buscar destino' : 'Buscar origen'
+                      placeholder ? placeholder : fromOurTo ? 'BUSCAR DESTINO' : 'BUSCAR ORIGEN'
                     }
                   </option>
                   {DataTransfer?.map((item, i) => {
@@ -222,7 +210,6 @@ function Header({placeholder}) {
                     )
                   })}
               </select>
-              <SearchIcon className='hidden md:inline-flex h-8 bg-blue-app text-white rounded-full p-2 cursor-pointer mx-2 '/>
             </div>
             
           </div>
@@ -231,30 +218,10 @@ function Header({placeholder}) {
 
       </div>
 
-      {searchInput && (
-        <div className='flex justify-center'>
-
-         {/*  <motion.div 
-            className={styles.steps_container}
-            initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{
-                delay: 0.3,
-                duration: .5,
-            }}
-          >
-            <div className={styles.steps_content}>
-
-                <h1>Hola !!</h1>
-
-            </div>
-          </motion.div> */}
-
-
-
-
+      {searchInput || toBooking ? (
+        <div className='flex justify-center rounded-lg h-[80vh]'>
           <motion.div 
-            className='flex flex-col col-span-3 w-max lg:w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white'
+            className='flex flex-col justify-between col-span-3 w-max lg:w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-full'
             initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
@@ -431,6 +398,7 @@ function Header({placeholder}) {
                   if(formStep === 2 || formStep === 3){
                     return prevStep();
                   }
+                  setToBooking(false)
                   return setSearchInput("")
                 }}
               >
@@ -454,11 +422,8 @@ function Header({placeholder}) {
             </div>
 
           </motion.div>
-
-
         </div>
-      )}
-
+      ): <></>}
     </header>
   ) 
 }

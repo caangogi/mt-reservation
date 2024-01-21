@@ -29,4 +29,4 @@ export const services = [
       description: 'Organiza eventos exitosos con nuestro servicio de traslados para grupos. Bodas, cenas, eventos corporativos, ¡cuenta con nosotros!',
       imageUrl: '/images/services_cards/06.png',
     },
-  ];
+];

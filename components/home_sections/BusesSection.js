@@ -2,7 +2,7 @@ import React from 'react'
 import { buses } from '../data/BusesData'
 import Image from 'next/image'
 
-export default function BusesSection() {
+export default function BusesSection({setToBooking}) {
   return (
     <>
         {/* Desktop */}
@@ -18,7 +18,10 @@ export default function BusesSection() {
                 <div className="p-6 w-1/2">
                     <h3 className="text-2xl font-bold mb-3">{bus.name}</h3>
                     <p className="text-gray-600">{bus.description}</p>
-                    <button className="mt-4 bg-blue-app text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                    <button 
+                        className="mt-4 bg-blue-app text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-blue-700 md:w-[50%]"
+                        onClick={() => setToBooking(true)}
+                    >
                     ¡Reserva Ahora!
                     </button>
                 </div>
@@ -37,7 +40,10 @@ export default function BusesSection() {
                     <Image src={bus.imageUrl} alt={bus.name} width={640} height={400} objectFit="cover" className="w-full rounded-md" />
                     <h3 className="text-2xl font-bold mb-4">{bus.name}</h3>
                     <p className="text-gray-600">{bus.description}</p>
-                    <button className="mt-4 bg-blue-app text-white font-bold py-2 px-4 rounded hover:bg-blue-700">
+                    <button 
+                        className="mt-4 bg-blue-app text-white font-bold py-2 px-4 rounded-full shadow-md hover:bg-blue-700 w-full"
+                        onClick={() => setToBooking(true)}
+                    >
                     ¡Reserva Ahora!
                     </button>
                 </div>

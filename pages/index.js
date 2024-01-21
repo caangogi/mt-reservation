@@ -17,6 +17,8 @@ import PlacesSection from '../components/home_sections/PlacesSection'
 
 export default function Home() {
 
+  const [toBooking, setToBooking] = useState(false)
+
   return (
     <div>
         <Head>
@@ -24,18 +26,24 @@ export default function Home() {
             <meta name="description" content="Especialistas en transportes en Mallorca, ofrecemos traslados desde y hacia el aeropuerto para particulares y empresas. ¡Reserva ahora para un servicio rápido y eficiente!" />
         </Head> 
 
-        <Header />
+        <Header 
+          toBooking={toBooking}
+          setToBooking={setToBooking}
+        />
         <Banner />
         
         <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
 
-            <BusesSection />
+            <BusesSection
+              setToBooking={setToBooking}
+            />
 
             <CTASection />
 
             <ServicesSection />
 
-            <ReservaSection />
+            <ReservaSection 
+            />
 
             <PlacesSection />
             

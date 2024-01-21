@@ -27,7 +27,7 @@ function LargeCard({img, title, description, buttonText, cta_position}) {
                target="_blank"
                rel="noreferrer" 
             >
-              <button className='text-sm lg:text-xl text-white bg-green-500 px-4 py-2 rounded-lg mt-5'>{buttonText}</button>
+              <button className='text-sm lg:text-xl text-white bg-green-500 px-4 py-2 rounded-full shadow-md mt-5 w-full'>{buttonText}</button>
             </a>
         </div>
     </section>
