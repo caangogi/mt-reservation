@@ -3,12 +3,8 @@ import Head from 'next/head'
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import Banner from '../components/Banner';
-import SmallCard from '../components/cards/SmallCard'
-import MediumCard from '../components/cards/MediumCard'
 import LargeCard from '../components/cards/LargeCard';
 import WhatsAppButton from '../components/buttons/WhatsAppButton';
-import {DataTransfer} from '../components/data/TarifasTransporte';
-import {CardsData} from '../components/data/MediumCardsData'
 import BusesSection from '../components/home_sections/BusesSection'
 import ServicesSection from '../components/home_sections/ServicesSections'
 import CTASection from '../components/home_sections/CTASection'
@@ -30,9 +26,11 @@ export default function Home() {
           toBooking={toBooking}
           setToBooking={setToBooking}
         />
+        
         <Banner />
         
         <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
+
 
             <BusesSection
               setToBooking={setToBooking}
