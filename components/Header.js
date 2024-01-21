@@ -146,7 +146,7 @@ function Header({placeholder, setToBooking, toBooking}) {
 
   return (
     <header 
-      className='sticky top-0 z-50 py-1 md:px-10 flex-col'
+      className='fixed top-0 z-50 py-1 md:px-10 flex-col w-full'
     >
       <div className='flex flex-col gap-4 justify-around items-center lg:flex-row bg-white p-6 rounded-2xl lg:rounded-full shadow-md'>
         
@@ -219,9 +219,9 @@ function Header({placeholder, setToBooking, toBooking}) {
       </div>
 
       {searchInput || toBooking ? (
-        <div className='flex justify-center rounded-lg h-[80vh]'>
+        <div className='flex justify-center rounded-lg h-[80vh] backdrop-blur-md '>
           <motion.div 
-            className='flex flex-col justify-between col-span-3 w-max lg:w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-full'
+            className='flex flex-col justify-between col-span-3 w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-full'
             initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
