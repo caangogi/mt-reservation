@@ -23,7 +23,7 @@ export default function App({amount}) {
           body: JSON.stringify({amount: amount}),
         })
           .then((res) => {
-            console.log(res)
+            console.log('RESPONSE::', res)
             res.json()
           })
           .then((data) => setClientSecret(data.clientSecret));
