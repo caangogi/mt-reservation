@@ -15,13 +15,23 @@ export default function App({amount}) {
   React.useEffect(() => {
     // Create PaymentIntent as soon as the page loads
    /*  if(!clientSecret) return */
-    fetch("/api/create-payment-intent", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({amount: amount}),
-    })
-      .then((res) => res.json())
-      .then((data) => setClientSecret(data.clientSecret));
+    async function createPaymentIntent (){
+      try {
+        fetch("/api/create-payment-intent", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({amount: amount}),
+        })
+          .then((res) => {
+            console.log(res)
+            res.json()
+          })
+          .then((data) => setClientSecret(data.clientSecret));
+      } catch (error) {
+          console.log('Ups, ha ocurrido un error al crear el pago.', error)
+      }
+    }
+    createPaymentIntent()
   }, [CheckoutForm]);
 
   const appearance = {

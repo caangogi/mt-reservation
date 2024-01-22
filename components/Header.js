@@ -102,7 +102,6 @@ function Header({placeholder, setToBooking, toBooking}) {
       price: total,
     })
   }
-
  
   const selectionRange = {
     startDate: bookingState.startDate,
@@ -149,8 +148,6 @@ function Header({placeholder, setToBooking, toBooking}) {
   const prevStep = () =>{
     return setFormStep(() => formStep - 1)
   };
-
- /*  console.log(fullPayment ? bookingState.price : bookingState.price *.2) */
 
   return (
     <header 
