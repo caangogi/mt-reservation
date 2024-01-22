@@ -26,7 +26,7 @@ export default function Home() {
           toBooking={toBooking}
           setToBooking={setToBooking}
         />
-        
+
         <Banner />
         
         <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
