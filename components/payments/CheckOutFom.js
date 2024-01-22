@@ -8,7 +8,7 @@ import { FaCcStripe, FaCcVisa, FaCcMastercard } from 'react-icons/fa';
 import { RiSecurePaymentLine } from 'react-icons/ri';
 import toast from "react-hot-toast";
 
-export default function CheckoutForm() {
+export default function CheckoutForm({searchUrl}) {
   const stripe = useStripe();
   const elements = useElements();
 
