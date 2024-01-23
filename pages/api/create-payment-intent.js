@@ -11,13 +11,13 @@ export default async function handler(req, res) {
     const paymentIntent = await stripe.paymentIntents.create({
         amount: calculateOrderAmount(amount),
         currency: "eur",
-        automatic_payment_methods: {
-        enabled: true,
-        },
+        payment_method_types: [ 'card' ],
     });
+    if(paymentIntent.client_secret){
     res.send({
         clientSecret: paymentIntent.client_secret,
     });
+   }
   } catch (error) {
     console.log('Ups, algo ha ido mal en createPaymentIntent', error)
   }

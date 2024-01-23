@@ -41,7 +41,6 @@ function Header({placeholder, setToBooking, toBooking}) {
   });
 
   const [searchInput, setSearchInput] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
   const [formStep, setFormStep] = useState(1);
   const [fromOurTo, setFromOurTo] = useState(true);
   const [fullPayment, setFullPayment] = useState(true)
@@ -96,7 +95,8 @@ function Header({placeholder, setToBooking, toBooking}) {
 
   function totalPrice(){
     const price = calcularPrecio(searchInput, bookingState.numOfGuests)
-    const total = (bookingState.startDate >= bookingState.endDate) ? price : (price - ((price * 2) * 0.1))
+    const isSameDay = bookingState.startDate === bookingState.endDate;
+    const total = isSameDay  ? price : (price * 2) * 0.9;
     setBookingState({
       ...bookingState, 
       price: total,
@@ -109,11 +109,14 @@ function Header({placeholder, setToBooking, toBooking}) {
     key:'selection'
   };
 
-  const search = async () =>{
+  const setQuery = async () =>{
 
-    await createBooking({...bookingState  });
+    alert('Hello pa')
 
-    router.push({
+ /*    await createBooking({...bookingState  }); */
+
+    
+     return {
       pathname: '/search',
       query: {
         location: searchInput,
@@ -126,8 +129,11 @@ function Header({placeholder, setToBooking, toBooking}) {
         fromOurTo: fromOurTo,
         price: bookingState.price
       }
-    })
+     }
+  
   };
+
+
 
   const createBooking = async (bookingState) => {
     try {
@@ -151,12 +157,12 @@ function Header({placeholder, setToBooking, toBooking}) {
 
   return (
     <header 
-      className='fixed top-0 z-50 py-1 md:px-10 flex-col w-full'
+      className='fixed top-0 z-50 md:px-10 flex-col w-full h-5'
     >
-      <div className='flex flex-col gap-4 justify-around items-center lg:flex-row bg-white p-6 rounded-2xl lg:rounded-full shadow-md'>
+      <div className='flex flex-col gap-4 justify-around items-center lg:flex-row bg-white p-2  rounded-2xl lg:rounded-full shadow-md'>
         
         <div 
-          className={`relative  items-center gap-3 h-10 cursor-pointer my-auto ${searchInput || toBooking ? 'hidden' : 'flex' }`}
+          className={`relative  items-center gap-3 cursor-pointer  ${searchInput || toBooking ? 'hidden' : 'flex' }`}
           onClick={() => router.push('/')}
         >
           <Image 
@@ -224,9 +230,9 @@ function Header({placeholder, setToBooking, toBooking}) {
       </div>
 
       {searchInput || toBooking ? (
-        <div className='flex justify-center rounded-lg h-[80vh] backdrop-blur-md overflow-scroll'>
+        <div className='flex justify-center rounded-lg h-[88vh] backdrop-blur-md overflow-scroll'>
           <motion.div 
-            className='flex flex-col justify-between col-span-3 w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-full'
+            className='flex flex-col gap-1 justify-between col-span-3 w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-[80%] md:h-[90%]'
             initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
@@ -341,7 +347,7 @@ function Header({placeholder, setToBooking, toBooking}) {
                 }}
               >
                 
-                <div className='flex flex-col mb-4'>
+                <div className='flex flex-col '>
                   <h2 className='text-sm lg:text-lg flex-grow pl-2'>Nombre</h2>
                   <input 
                     type="text" 
@@ -352,7 +358,7 @@ function Header({placeholder, setToBooking, toBooking}) {
                   />
                 </div>
 
-                <div className='flex flex-col items-left mb-4'>
+                <div className='flex flex-col items-left '>
                   <h2 className='text-sm lg:text-lg flex-grow pl-2'>Email</h2>
                   <input 
                     type="email"
@@ -363,7 +369,7 @@ function Header({placeholder, setToBooking, toBooking}) {
                   />
                 </div>
 
-                <div className='flex flex-col mb-4'>
+                <div className='flex flex-col '>
                   <h2 className='text-sm lg:text-lg flex-grow  mt-1'>Número de teléfono</h2>
                   <input 
                     type="text" 
@@ -373,7 +379,8 @@ function Header({placeholder, setToBooking, toBooking}) {
                     onChange={bookingStateChange}
                   />
                 </div>
-                <div className='flex flex-col mb-4'>
+
+                <div className='flex flex-col '>
                   <h2 className='text-sm lg:text-lg flex-grow  mt-1'>Observación y/o commentarios</h2>
                   <textarea 
                     type="text" 
@@ -383,7 +390,8 @@ function Header({placeholder, setToBooking, toBooking}) {
                     onChange={bookingStateChange}
                   />
                 </div>
-                <div className='flex items-center border-b mb-4 pr-5'>
+
+                <div className='flex items-center border-b  pr-5'>
                   <h2 className='text-sm lg:text-lg flex-grow pl-2'>Aceptar terminos y condiciones</h2>
                   <input 
                     type="checkbox" 
@@ -394,8 +402,10 @@ function Header({placeholder, setToBooking, toBooking}) {
                     min={0}
                   />
                 </div>
+                
               </motion.div>
             )}
+
             {formStep === 4 && ( 
               <motion.div
                   initial={{ y: 50, opacity: 0 }}
@@ -462,6 +472,17 @@ function Header({placeholder, setToBooking, toBooking}) {
             {formStep === 5 && (
               <Payments 
                 amount={(fullPayment ? bookingState.price : bookingState.price *.2)}
+                params={{
+                  location: searchInput,
+                    startDate: bookingState.startDate.toISOString(),
+                    endDate: bookingState.endDate.toISOString(),
+                    noOfGuests : bookingState.numOfGuests,
+                    noOfBags: bookingState.numOfBags,
+                    numOfBikes : bookingState.numOfBikes,
+                    babyChair: bookingState.babyChair,
+                    fromOurTo: fromOurTo,
+                    price: bookingState.price
+                }}
               />
             )}
 
