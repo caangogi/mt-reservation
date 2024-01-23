@@ -30,8 +30,6 @@ export default function Home() {
         <Banner />
         
         <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
-
-
             <BusesSection
               setToBooking={setToBooking}
             />
@@ -52,14 +50,16 @@ export default function Home() {
           />
         <main  className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
           <PlacesSection />
+          <BusesSection
+              setToBooking={setToBooking}
+            />
         </main>
-        <LargeCard 
-              img='/images/services_cards/04.png'
+        <LargeCard  img='/images/services_cards/04.png'
               title='¿Inquietudes? Contáctanos por WhatsApp'
               description="Contáctanos para resolver tus inquietudes"
               buttonText='Contáctanos por WhatsApp'
               cta_position='right-40'
-          />
+        />
         <Footer />
         <WhatsAppButton/>
     </div>
