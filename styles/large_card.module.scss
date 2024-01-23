@@ -1,11 +1,28 @@
+.ctaDiv{
+    width: 40vw;
+}
 
 @media only screen and (max-width: 992px){
     .ctaDiv{
         width: 100%;
         left: 0;
+        top: 0;
         padding: 1rem;
+        border-radius: 0px;
         & h3{
-            font-size: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.2rem;
         }
+        & p{
+            font-size: .7rem;
+
+        }
+        & .imagen{
+            object-fit: cover !important;
+            border: 5px solid red;
+
+        }
+
+        
     }
 }

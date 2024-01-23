@@ -35,32 +35,33 @@ export default function Home() {
             <BusesSection
               setToBooking={setToBooking}
             />
-
-            <CTASection />
-
-            <ServicesSection />
-
-            <ReservaSection 
-            />
-
-            <PlacesSection />
-            
-            <LargeCard 
-                img='/images/large_card_image.webp'
-                title='¿Inquietudes? Contáctanos por WhatsApp'
-                description="Contáctanos para resolver tus inquietudes"
-                buttonText='Contáctanos por WhatsApp'
-                cta_position='left-12'
-            />
-
         </main>
-        
-        <Footer 
 
-        />
+        <CTASection />
 
+        <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
+            <ServicesSection />
+        </main>
+        <ReservaSection />
+        <LargeCard 
+              img='/images/large_card_image.webp'
+              title='¿Inquietudes? Contáctanos por WhatsApp'
+              description="Contáctanos para resolver tus inquietudes"
+              buttonText='Contáctanos por WhatsApp'
+              cta_position='left-40'
+          />
+        <main  className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
+          <PlacesSection />
+        </main>
+        <LargeCard 
+              img='/images/services_cards/04.png'
+              title='¿Inquietudes? Contáctanos por WhatsApp'
+              description="Contáctanos para resolver tus inquietudes"
+              buttonText='Contáctanos por WhatsApp'
+              cta_position='right-40'
+          />
+        <Footer />
         <WhatsAppButton/>
-
     </div>
   )
 }

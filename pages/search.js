@@ -31,7 +31,7 @@ function ConfirmationPage() {
         />
       </Head>
       <Header placeholder={location} />
-      <main className="max-w-7xl mx-auto px-8 sm:px-16 flex-grow pt-14 mt-[10vh]">
+      <main className="max-w-7xl mx-auto px-8 sm:px-16 flex-grow pt-[25vh]">
         <section className="flex flex-col gap-6 items-center text-center">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
             Confirmación de Reserva

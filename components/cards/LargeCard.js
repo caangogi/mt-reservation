@@ -13,14 +13,13 @@ function LargeCard({img, title, description, buttonText, cta_position}) {
                 src={img}
                 layout='fill'
                 objectFit='cover'
-                className='rounded-2xl'
                 alt='Mallorca Ilustration'
             />
         </div>
         
         <div className={`absolute top-32 ${cta_position} bg-white p-5 rounded-2xl shadow-2xl ${styles.ctaDiv}`}
         >
-            <h3 className='text-4xl mb-3 w-64'>{title}</h3>
+            <h3 className='text-4xl mb-3'>{title}</h3>
             <p>{description}</p>
             <a 
                href={`https://wa.me/34671741577?text=Hola`}

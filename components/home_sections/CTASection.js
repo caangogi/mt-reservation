@@ -8,7 +8,7 @@ const ContactCTASection = () => {
         title='¿Inquietudes? Contáctanos por WhatsApp'
         description="Contáctanos para resolver tus inquietudes"
         buttonText='Contáctanos por WhatsApp'
-        cta_position='right-12'
+        cta_position='right-40'
     />
   );
 };
