@@ -13,3 +13,6 @@ body::-webkit-scrollbar {
     display: none;
 }
 
+.searchApp::-webkit-scrollbar {
+    display: none;
+}

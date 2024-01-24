@@ -25,7 +25,7 @@
     "**/*.tsx",
     "pages/index.js",
     "pages/_app.js"
-  ],
+, "components/forms/BookingForm.js"  ],
   "exclude": [
     "node_modules"
   ]

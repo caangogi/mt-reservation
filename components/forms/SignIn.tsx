@@ -33,7 +33,7 @@ const LoginForm: React.FC = () => {
         <div className="text-center">
           <p className="text-blue-500">¡Hola, {currentUser.email}!</p>
           <Link 
-            href={'/routes-map-list'}
+            href={'/admin/routes-map-list'}
           >
             <button
               className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
@@ -43,7 +43,17 @@ const LoginForm: React.FC = () => {
           </Link>
           <br/>
           <Link 
-            href={'/create-road-map'}
+            href={'/admin/bookings-list'}
+          >
+            <button
+              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+            >
+             Ver Reservas
+            </button>
+          </Link>
+          <br/>
+          <Link 
+            href={'/admin/create-road-map'}
           >
             <button
               className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"

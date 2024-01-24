@@ -54,7 +54,7 @@ export default function Home() {
               setToBooking={setToBooking}
             />
         </main>
-        <LargeCard  img='/images/services_cards/04.png'
+        <LargeCard  img='/images/services_cards/08.png'
               title='¿Inquietudes? Contáctanos por WhatsApp'
               description="Contáctanos para resolver tus inquietudes"
               buttonText='Contáctanos por WhatsApp'

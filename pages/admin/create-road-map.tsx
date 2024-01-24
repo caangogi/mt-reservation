@@ -1,6 +1,6 @@
 import React from 'react'
-import withAuth from '../components/hooks/WithAuth';
-import RoadMapForm from '../components/forms/RoadMapForm';
+import withAuth from '../../components/hooks/WithAuth';
+import RoadMapForm from '../../components/forms/RoadMapForm';
 
 function CreateRoadMapPage() {
   return (
