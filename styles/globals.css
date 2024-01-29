@@ -15,4 +15,5 @@ body::-webkit-scrollbar {
 
 .searchApp::-webkit-scrollbar {
     display: none;
+    
 }

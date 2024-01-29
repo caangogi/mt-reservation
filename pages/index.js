@@ -42,12 +42,12 @@ export default function Home() {
         </main>
         <ReservaSection />
         <LargeCard 
-              img='/images/large_card_image.webp'
+          img='/images/large_card_image.webp'
               title='¿Inquietudes? Contáctanos por WhatsApp'
               description="Contáctanos para resolver tus inquietudes"
               buttonText='Contáctanos por WhatsApp'
               cta_position='left-40'
-          />
+        />
         <main  className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
           <PlacesSection />
           <BusesSection
