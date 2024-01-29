@@ -10,6 +10,7 @@ import ServicesSection from '../components/home_sections/ServicesSections'
 import CTASection from '../components/home_sections/CTASection'
 import ReservaSection from '../components/home_sections/ReservaSection'
 import PlacesSection from '../components/home_sections/PlacesSection'
+import FaqSection from '../components/home_sections/FAQsSection';
 
 export default function Home() {
 
@@ -50,6 +51,7 @@ export default function Home() {
         />
         <main  className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
           <PlacesSection />
+          <FaqSection />
           <BusesSection
               setToBooking={setToBooking}
             />

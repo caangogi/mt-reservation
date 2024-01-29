@@ -51,8 +51,8 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
   const handleSelect = (ranges) =>{
       setBookingState({
         ...bookingState,
-        startDate: ranges.selection.startDate,
-        endDate: ranges.selection.endDate,
+        startDate: ranges.selection?.startDate,
+        endDate: ranges.selection?.endDate,
       })
   };
 
@@ -96,7 +96,7 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
 
   function totalPrice(){
     const price = calcularPrecio(searchInput, bookingState.numOfGuests)
-    const isSameDay = bookingState.startDate === bookingState.endDate;
+    const isSameDay = bookingState?.startDate === bookingState.endDate;
     const total = isSameDay  ? price : (price * 0.9) * 2;
     setBookingState({
       ...bookingState, 
@@ -139,7 +139,7 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
   }, [toBooking])
 
 
-  useEffect(() => {handleSelect(selectionRange)}, [searchInput])
+/*   useEffect(() => {handleSelect(selectionRange)}, [searchInput]) */
 
 
   return (
@@ -196,9 +196,9 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
       </div>
 
       {searchInput || toBooking ? (
-        <div className='searchApp flex justify-center h-[88vh] backdrop-blur-md overflow-scroll fixed top-[17vh] md:top-[13vh] left-0 w-full'>
+        <div className='searchApp flex justify-center h-[88vh] backdrop-blur-md overflow-scroll fixed top-[20vh] md:top-[13vh] left-0 w-full'>
           <motion.div 
-            className='flex flex-col gap-1 justify-between col-span-3 w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-[80%] md:h-[90%]'
+            className='flex flex-col gap-1 justify-between col-span-3 w-96 mt-2 border-2 p-4 rounded-2xl shadow-md bg-white h-[87%] md:h-[90%]'
             initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{
