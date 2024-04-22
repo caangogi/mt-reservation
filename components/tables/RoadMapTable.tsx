@@ -10,7 +10,8 @@ import { InvoiceTemplate } from '../templates/InvoiceTemplate';
 import { useAuth } from '../../context/auth';
 import { BiSolidFilePdf } from "react-icons/bi";
 import { GiRoad } from "react-icons/gi";
-import { MdDeleteForever } from "react-icons/md";
+import { MdDeleteForever, MdOutlineEditRoad  } from "react-icons/md";
+import EditInvoice from '../forms/EditInvoice';
 
 interface RoadmapTableProps {
   roadmaps: RoadMapProps[];
@@ -24,7 +25,8 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
   const [newInvoiceNumber, setNewInvoiceNumber] = useState<string>();
   const [loading, setLoading] = useState<boolean>(false);
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
-
+  const [isEditModalOpen, setEditModalOpen] = useState<boolean>(false);
+  const [selectedRoadmap, setSelectedRoadmap] = useState<RoadMapProps>();
 
   const filteredRoadmaps = roadmaps.filter((roadmap) => {
     const clientName = `${roadmap.client.name} ${roadmap.client.lastName}`.toLowerCase();
@@ -61,7 +63,8 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
     }
   };
 
-  const handleButtonClick = () => {
+  const handleDeleteButtonClick = (roadmap: RoadMapProps) => {
+    setSelectedRoadmap(roadmap);
     setModalOpen(true);
   };
 
@@ -69,7 +72,7 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
     setModalOpen(false);
   };
 
-  const handleDelete = async (roadMapId: string | any) => {
+  const handleDelete = async (roadMapId: string) => {
     setLoading(true)
     try {
 
@@ -84,6 +87,18 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
       setLoading(false);
       console.error('Error al eliminar el elemento:', error);
     }
+  };
+
+
+  
+
+  const handleEditButtonClick = (roadmap: RoadMapProps) => {
+    setSelectedRoadmap(roadmap);
+    setEditModalOpen(true); 
+  }
+
+  const handleEditModalClose = () => {
+    setEditModalOpen(false);
   };
 
   return (
@@ -116,8 +131,8 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
           </tr>
         </thead>
         <tbody>
+
           {filteredRoadmaps.map((roadmap) => {
-            
             const timestamp = roadmap.date instanceof Date
             ? roadmap.date
             : new Date(roadmap.date.seconds * 1000 + (roadmap.date.nanoseconds || 0) / 1e6);
@@ -179,7 +194,7 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
 
                     <div className=' flex flex-col justify-center text-center'>
                       <button
-                          className=" bg-green-600 hover:bg-green-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                          className="bg-red-600 hover:bg-red-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
                           onClick={() =>{
                               const invoiceTemplate = InvoiceTemplate(roadmap, userProfile);
                               generatePDF(invoiceTemplate)
@@ -192,41 +207,53 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
                       <p className=" text-xs ">Facturar</p>
                     </div>
 
-                  <div className=' flex flex-col justify-center text-center'>
-                      <a
-                            href={roadmap.invoiceUrl}
-                            target="_blank"
-                            rel="noreferrer"
+                    <div className=' flex flex-col justify-center text-center'>
+                        <a
+                              href={roadmap.invoiceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                          >
+                              <button
+                                  className=" bg-blue-600 hover:bg-blue-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                              >
+                                  <GiRoad />
+                              </button>
+                          </a>
+                        <p className=" text-xs ">Ruta</p>
+                    </div>
+
+                    <div className=' flex flex-col justify-center text-center'>
+                        <button
+                            className=" bg-lime-500 hover:bg-lime-300 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                            onClick={() => handleEditButtonClick(roadmap)}
                         >
-                            <button
-                                className=" bg-blue-600 hover:bg-blue-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
-                            >
-                                <GiRoad />
-                            </button>
-                        </a>
-                      <p className=" text-xs ">Ruta</p>
-                  </div>
+                            <MdOutlineEditRoad />
+                        </button>
+                        <p className=" text-xs ">Editar</p>
+                    </div>
                     
-                  <div className=' flex flex-col justify-center text-center'>
-                    <button
-                          className="bg-red-600 hover:bg-red-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
-                          onClick={handleButtonClick}
-                      >
-                        <MdDeleteForever />
-                    </button>
-                    <p className=" text-xs ">Eliminar</p>
-                  </div>
+                    <div className=' flex flex-col justify-center text-center'>
+                      <button
+                            className="bg-red-600 hover:bg-red-400 text-white text-2xl font-bold p-1 rounded w-full flex justify-center"
+                            onClick={() => handleDeleteButtonClick(roadmap)}
+                        >
+                          <MdDeleteForever />
+                      </button>
+                      <p className=" text-xs ">Eliminar</p>
+                    </div>
+
                   </td>
                 </tr>
-                {isModalOpen && (
-                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-                      <div className="absolute bg-slate-500 opacity-75 w-full h-full"></div>
-                      <div className="bg-white p-8 rounded shadow-lg z-10">
-                        <p className="mb-4">Estas a punto de eliminar la factura <strong>Nº{roadmap.invoiceNumber}</strong> <br/> ¿Estás seguro que deseas continuar? </p>
-                       {!loading ?
+
+                {isModalOpen && selectedRoadmap && (
+                  <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+                    <div className="absolute bg-slate-500 opacity-75 w-full h-full"></div>
+                    <div className="bg-white p-8 rounded shadow-lg z-10">
+                      <p className="mb-4">Estas a punto de eliminar la factura <strong>Nº{selectedRoadmap.invoiceNumber}</strong> <br/> ¿Estás seguro que deseas continuar? </p>
+                      {!loading ?
                         <>
                           <button
-                            onClick={() => handleDelete(roadmap.id)}
+                            onClick={() => selectedRoadmap.id && handleDelete(selectedRoadmap.id)}
                             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4"
                           >
                             Sí, eliminar
@@ -238,15 +265,25 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
                             Cancelar
                           </button>
                         </>
-                       : 
+                      : 
                         <>
                           <p className="mb-4"> Estamos trabajando en ello, un momento...  </p>
                           <GreatLoader/>
                         </>
-                       
-                       }
-                      </div>
+                      }
                     </div>
+                  </div>
+                )}
+
+                {isEditModalOpen && selectedRoadmap && (
+                  <div className="fixed top-0 left-0 w-full h-full flex items-start justify-center">
+                    <div className="absolute bg-slate-500 opacity-75 w-full h-full" onClick={handleEditModalClose}></div>
+                    <div className="bg-white p-8 rounded shadow-lg z-10 overflow-y-scroll h-full">
+                      <EditInvoice 
+                        formData={selectedRoadmap}
+                      />
+                    </div>
+                  </div>
                 )}
               </>
             )

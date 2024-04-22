@@ -6,6 +6,7 @@ export type User = {
     lastName: string;
     documentType: string;
     documentID: string;
+    address?: string;
     phone: string;
     email: string;
     type: UserType;

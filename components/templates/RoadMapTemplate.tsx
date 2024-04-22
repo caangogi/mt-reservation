@@ -11,9 +11,10 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
     const date = timestamp.toLocaleDateString();
     const time = timestamp.toLocaleTimeString();
 
-    const sum = (num1: number, num2:number): number => num1 + num2;
+    const calculateBase = (total: number, iva: number): number => total - iva;
+
     const iva: number = roadMapProps.price * 0.1;
-    const total = sum(Number(roadMapProps.price), Number(iva))
+    const base = calculateBase(Number(roadMapProps.price), Number(iva));
 
     return `
       <!DOCTYPE html>
@@ -251,10 +252,13 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                     </div>
                     <div>
                       <div>
-                        <p> <strong> Nombre: </strong> ${roadMapProps.client.name} ${roadMapProps.client.lastName}  </p> 
+                        <p> <strong> Nombre: </strong> ${roadMapProps.client.name} ${roadMapProps.client.lastName} </p> 
                       </div>
                       <div>
                         <p> <strong>Documento: </strong> ${roadMapProps.client.documentType}: ${roadMapProps.client.documentID}  </p> 
+                      </div>
+                      <div>
+                        <p> <strong>Télefono: </strong> ${roadMapProps.client.address} </p> 
                       </div>
                       <div>
                         <p> <strong>Télefono: </strong> ${roadMapProps.client.phone} </p> 
@@ -316,9 +320,9 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               <tbody>
                 <tr>
                   <td>${roadMapProps.paymentMethod}</td>
-                  <td>${formatterEuro.format(roadMapProps.price)}</td>
+                  <td>${formatterEuro.format(base)}</td>
                   <td>${formatterEuro.format(iva)}</td>
-                  <td>${formatterEuro.format(total)}</td>
+                  <td>${formatterEuro.format(roadMapProps.price)}</td>
                 </tr>
                
               </tbody>

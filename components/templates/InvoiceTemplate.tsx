@@ -11,9 +11,10 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
     const date = timestamp.toLocaleDateString();
     const time = timestamp.toLocaleTimeString();
 
-    const sum = (num1: number, num2:number): number => num1 + num2;
+    const calculateBase = (total: number, iva: number): number => total - iva;
+
     const iva: number = roadMapProps.price * 0.1;
-    const total = sum(Number(roadMapProps.price), Number(iva))
+    const base = calculateBase(Number(roadMapProps.price), Number(iva));
 
     return `
       <!DOCTYPE html>
@@ -226,7 +227,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                         <p>Calle Music Baltasar Samper, 2B 3-1</p>
                         <p>07008 Palma de Mallorca</p>
                         <p>ILLES BALEARS</p>
-                        <p>info@mrjhonytransfer.com</p>
+                        <p>santiagosbus1@gmail.com</p>
                     </div>
                 </div>
             </header>
@@ -256,6 +257,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 <tr>
                   <th>Nombre</th>
                   <th>Documento</th>
+                  <th>Dirección</th>
                   <th>Télefono</th>
                   <th>Email</th>
                 </tr>
@@ -264,6 +266,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 <tr>
                   <td>${roadMapProps.client.name} ${roadMapProps.client.lastName}</td>
                   <td>${roadMapProps.client.documentType} ${roadMapProps.client.documentID}</td>
+                  <td>${roadMapProps.client.address}</td>
                   <td>${roadMapProps.client.phone}</td>
                   <td>${roadMapProps.client.email}</td>
                 </tr>
@@ -312,9 +315,9 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
             <tbody>
               <tr>
                 <td>${roadMapProps.paymentMethod}</td>
-                <td>${formatterEuro.format(roadMapProps.price)}</td>
+                <td>${formatterEuro.format(base)}</td>
                 <td>${formatterEuro.format(iva)}</td>
-                <td>${formatterEuro.format(total)}</td>
+                <td>${formatterEuro.format(roadMapProps.price)}</td>
               </tr>
              
             </tbody>

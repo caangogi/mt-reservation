@@ -1,5 +1,4 @@
-import React, {useState} from 'react';
-import { useRoadmaps } from '../../context/RoadMapsContext';
+import React, {useState} from 'react'
 import { RoadMap } from "../../backend/road-map/aplication/Roadmap";
 import { RoadMapProps } from "../../backend/road-map/domain/types"; 
 import { User } from '../../backend/share/types';
@@ -12,45 +11,23 @@ import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 import { generatePDF } from '../../utils/generatePdf';
 import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
 import toast from 'react-hot-toast';
+import { db } from '../../services/FirebaseService';
 
-const RoadMapForm = () => {
+interface EditInvoiceProps {
+  formData: RoadMapProps;
+}
+
+const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
+  
   const { currentUser, userProfile } = useAuth();
-  const { lastInvoiceNumber } = useRoadmaps();
-
-  console.log('lastInvoiceNumber:', lastInvoiceNumber);
-
   const [loading, setLoading] = useState<boolean>(false)
-  const [formData, setFormData] = useState<RoadMapProps>({
-    id: uuidv4(),
-    client: {
-      name: '',
-      lastName: '',
-      documentType: '',
-      documentID: '',
-      address: '',
-      phone: '',
-      email: '',
-      type: 'guest'
-    },
-    date: new Date(),
-    origin: '',
-    destination: '',
-    serviceType: '',
-    contractedService: '',
-    passengers: 0,
-    price: 0,
-    paymentMethod: "",
-    driverId: currentUser?.uid,
-    invoiceNumber: "",
-    invoiceUrl: "",
-    observations: ""  
-  });
+  const [localFormData, setLocalFormData] = useState<RoadMapProps>(formData);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData({
+    setLocalFormData({
       ...formData,
       [name]: value,
     });
@@ -61,8 +38,8 @@ const RoadMapForm = () => {
     field: keyof User
   ) => {
     const { value } = e.target;
-    setFormData({
-      ...formData,
+    setLocalFormData({
+      ...localFormData,
       client: {
         ...formData.client,
         [field]: value,
@@ -70,19 +47,19 @@ const RoadMapForm = () => {
     });
   };
 
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
   
     try {
-      
+
+      console.log('formData', localFormData)
+
+      db.collection('road-maps').doc(localFormData.id).update(localFormData)
+
+     /*  
       const roadMapInstance = new RoadMap();
-
-      const invoiceNumber = lastInvoiceNumber 
-      ? `INV-${String(parseInt(lastInvoiceNumber.split('-')[1]) + 1).padStart(5, '0')}`
-      : 'INV-00001';
-
+      const { invoiceNumber } = await generateInvoiceNumber();
       const roadMapTemplate = RoadMapTemplate({...formData, invoiceNumber}, userProfile);
       const pdf = await generatePDF(roadMapTemplate)
       const url: any = await uploadPdfToStorage(pdf, formData.id)
@@ -92,16 +69,15 @@ const RoadMapForm = () => {
         invoiceNumber, 
         id: formData.id, 
         invoiceUrl: url
-      });
+      }); */
 
-      setFormData({
+      /* setFormData({
         id: '', 
         client: {
           name: '',
           lastName: '',
           documentType: '',
           documentID: '',
-          address: '',
           phone: '',
           email: '',
           type: 'guest',
@@ -117,11 +93,10 @@ const RoadMapForm = () => {
         driverId: currentUser?.uid,
         invoiceNumber: "",
         invoiceUrl: '',
-        observations: ''
       });
-
+ */
       setLoading(false);
-      toast.success('Hoja de ruta creada correctamente')
+      toast.success('Factura actualizada correctamente')
 
     } catch (error) {
       setLoading(false);
@@ -136,6 +111,18 @@ const RoadMapForm = () => {
     >
       <div className="mb-4">
         <h1 className="text-gray-700 text-lg font-bold ">Hoja de ruta</h1>
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Número de factura:
+            </label>
+            <input
+              type="text"
+              name="invoiceNumber"
+              value={localFormData.invoiceNumber}
+              onChange={handleInputChange}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+        </div>
       </div>
 
       
@@ -151,7 +138,7 @@ const RoadMapForm = () => {
             <input
               type="text"
               name="name"
-              value={formData.client.name}
+              value={localFormData.client.name}
               onChange={(e) => handleClientChange(e, 'name')}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -164,7 +151,7 @@ const RoadMapForm = () => {
             <input
               type="text"
               name="lastName"
-              value={formData.client.lastName}
+              value={localFormData.client.lastName}
               onChange={(e) => handleClientChange(e, 'lastName')}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -177,7 +164,7 @@ const RoadMapForm = () => {
             <input
               type="text"
               name="documentType"
-              value={formData.client.documentType}
+              value={localFormData.client.documentType}
               onChange={(e) => handleClientChange(e, 'documentType')}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -195,7 +182,7 @@ const RoadMapForm = () => {
             <input
               type="text"
               name="documentID"
-              value={formData.client.documentID}
+              value={localFormData.client.documentID}
               onChange={(e) => handleClientChange(e, 'documentID')}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -203,25 +190,12 @@ const RoadMapForm = () => {
       
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Dirección:
-            </label>
-            <input
-              type="text"
-              name="address"
-              value={formData.client.address}
-              onChange={(e) => handleClientChange(e, 'address')}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-          
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
               Teléfono:
             </label>
             <input
               type="text"
               name="phone"
-              value={formData.client.phone}
+              value={localFormData.client.phone}
               onChange={(e) => handleClientChange(e, 'phone')}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -234,7 +208,7 @@ const RoadMapForm = () => {
             <input
               type="email"
               name="email"
-              value={formData.client.email}
+              value={localFormData.client.email}
               onChange={(e) => handleClientChange(e, 'email')}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -255,7 +229,7 @@ const RoadMapForm = () => {
             type="text"
             name="origin"
             list="municipiosOrigenList"
-            value={formData.origin}
+            value={localFormData.origin}
             onChange={handleInputChange}
             className="w-full px-3 py-2 border rounded-md"
           />
@@ -273,7 +247,7 @@ const RoadMapForm = () => {
               type="text"
               name="destination"
               list="municipiosDestinoList"
-              value={formData.destination}
+              value={localFormData.destination}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -290,7 +264,7 @@ const RoadMapForm = () => {
               type="text"
               name="contractedService"
               list='contractedService'
-              value={formData.contractedService}
+              value={localFormData.contractedService}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -308,7 +282,7 @@ const RoadMapForm = () => {
               type="text"
               name="serviceType"
               list='serviceTypes'
-              value={formData.serviceType}
+              value={localFormData.serviceType}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -328,7 +302,7 @@ const RoadMapForm = () => {
               type="number"
               name="passengers"
               inputMode="numeric"
-              value={formData.passengers}
+              value={localFormData.passengers}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -342,7 +316,7 @@ const RoadMapForm = () => {
               type="text"
               name="paymentMethod"
               list='paymentMethods'
-              value={formData.paymentMethod}
+              value={localFormData.paymentMethod}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
@@ -361,22 +335,10 @@ const RoadMapForm = () => {
               type="number"
               name="price"
               inputMode="numeric"
-              value={formData.price}
+              value={localFormData.price}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
-          </div>
-          <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2">
-                Observaciones:
-              </label>
-              <textarea
-                name="observations"
-                inputMode="numeric"
-                value={formData.observations}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border rounded-md"
-              />
           </div>
         </div>
       </div>
@@ -389,7 +351,7 @@ const RoadMapForm = () => {
             type="submit"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full"
           >
-            Guardar hoja de ruta
+            Actualizar hoja de ruta
           </button>
         :
           <div
@@ -404,4 +366,4 @@ const RoadMapForm = () => {
   );
 };
 
-export default RoadMapForm;
+export default EditInvoice;

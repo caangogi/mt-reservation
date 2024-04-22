@@ -14,4 +14,5 @@ export type RoadMapProps = {
     invoiceNumber: string;
     invoiceUrl: string;
     paymentMethod: string;
+    observations: string;
 }

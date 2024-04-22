@@ -5,8 +5,6 @@ import html2canvas from 'html2canvas';
 
 export const generatePDF = async (template: string) => {
     try {
-        
-       
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = template;
         document.body.appendChild(tempDiv);

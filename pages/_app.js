@@ -2,6 +2,7 @@ import '../styles/globals.css'
 import ProgressBar from '@badrap/bar-of-progress';
 import Router from 'next/router';
 import { AuthProvider } from '../context/auth';
+import { RoadmapProvider } from '../context/RoadMapsContext';
 import { Toaster } from 'react-hot-toast';
 
 const progress = new ProgressBar({
@@ -18,8 +19,10 @@ Router.events.on('routeChangeError', progress.finish)
 function MyApp({ Component, pageProps }) {
   return (
     <AuthProvider>
+      <RoadmapProvider>
       <Component {...pageProps} />
       <Toaster />
+      </RoadmapProvider>
     </AuthProvider>
   )
 }

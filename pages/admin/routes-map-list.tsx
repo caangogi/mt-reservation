@@ -1,28 +1,10 @@
-import React, { useState, useEffect } from 'react';
 import withAuth from '../../components/hooks/WithAuth';
 import RoadmapTable from '../../components/tables/RoadMapTable';
-import { RoadMapProps } from '../../backend/road-map/domain/types';
-import {  onSnapshot, collection, query, orderBy } from "firebase/firestore";
-import { db } from '../../services/FirebaseService';
+import { useRoadmaps } from '../../context/RoadMapsContext';
 
 const RoutesMapList: React.FC = () => {
 
-    const [roadmaps, setRoadmaps] = useState<RoadMapProps[]>([]);
-    const q = query(collection(db, 'road-maps'), orderBy('date', 'desc'));
-
-    useEffect(() => {
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const roadmapsData: RoadMapProps[] = [];
-        snapshot.forEach((doc) => {
-          roadmapsData.push({
-            id: doc.id,
-            ...doc.data() as RoadMapProps
-        });
-        });
-        setRoadmaps(roadmapsData);
-      });
-      return () => unsubscribe();
-    }, []);
+    const { roadmaps } = useRoadmaps();
 
     return (
       <>

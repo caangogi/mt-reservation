@@ -1,20 +1,22 @@
 import  { useEffect, useState } from 'react'
-import Image from 'next/image'
+import {DateRange} from 'react-date-range';
+import 'react-date-range/dist/styles.css'; 
+import 'react-date-range/dist/theme/default.css';
+import {db} from '../../services/FirebaseService';
+import {DataTransfer} from '../data/TarifasTransporte';
+
 import { UsersIcon } from '@heroicons/react/solid'
 import {FaLuggageCart} from 'react-icons/fa'
 import {GiCycling, GiSchoolBag, GiTwoCoins} from 'react-icons/gi'
-import 'react-date-range/dist/styles.css'; 
-import 'react-date-range/dist/theme/default.css';
-import {DateRange} from 'react-date-range';
-import { useRouter } from 'next/dist/client/router';
-import {DataTransfer} from '../data/TarifasTransporte';
-import {motion} from 'framer-motion';
-import {formatterEuro} from '../../utils/formatEur'
-import {db} from '../../services/FirebaseService';
-import toast from 'react-hot-toast';
-import Payments from '../payments'
 import { FaCcStripe, FaCcVisa, FaCcMastercard } from 'react-icons/fa';
 import { RiSecurePaymentLine } from 'react-icons/ri';
+import { GiGolfFlag } from "react-icons/gi";
+import { LuBaby } from "react-icons/lu";
+
+import {motion} from 'framer-motion';
+import {formatterEuro} from '../../utils/formatEur'
+import toast from 'react-hot-toast';
+import Payments from '../payments'
 
 export default function BookingForm({setToBooking, toBooking, placeholder}) {
 
@@ -25,7 +27,9 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
     numOfBags: 0,
     numOfMiniBags: 0,
     numOfBikes: 0,
+    numGolfBags: 0,
     babyChair: false,
+    numBabyChairs: 0,
     price: 0,
 
     payment: {
@@ -137,6 +141,8 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
     if(!toBooking) return
     setSearchInput('PALMA CITY')
   }, [toBooking])
+
+  console.log(bookingState.babyChair)
 
 
 /*   useEffect(() => {handleSelect(selectionRange)}, [searchInput]) */
@@ -289,6 +295,19 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                     min={0}
                   />
                 </div>
+                <div className='flex items-center border rounded-lg mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de bolsas de golf</h2>
+                  <GiGolfFlag className='h-10 text-lg' />
+                  <input 
+                    type="number" 
+                    inputMode="numeric"
+                    className=' w-20 border rounded-lg  pl-2 p-1 text-lg outline-none text-blue-app'
+                    name='numGolfBags'
+                    value={bookingState.numGolfBags}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                </div>
                 <div className='flex items-center border-b mb-4 pr-5'>
                   <h2 className='text-sm lg:text-lg flex-grow pl-2'>Silla de bebe</h2>
                   <input 
@@ -300,6 +319,21 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                     min={0}
                   />
                 </div>
+                {bookingState.babyChair && (
+                  <div className='flex items-center border rounded-lg mb-4'>
+                   <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de sillas</h2>
+                   <LuBaby className='h-10 text-lg' />
+                   <input 
+                     type="number" 
+                     inputMode="numeric"
+                     className=' w-20 border rounded-lg  pl-2 p-1 text-lg outline-none text-blue-app'
+                     name='numBabyChairs'
+                     value={bookingState.numBabyChairs}
+                     onChange={bookingStateChange}
+                     min={0}
+                   />
+                 </div>
+                )}
               </motion.div>
             )}
 
