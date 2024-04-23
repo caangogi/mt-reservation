@@ -7,10 +7,10 @@ import { v4 as uuidv4 } from 'uuid'
 import { municipios } from '../data/MarllorcaMunicipios';
 import GreatLoader from '../loaders/GreatLoader';
 import { useAuth } from '../../context/auth';
-import generateInvoiceNumber from '../../utils/generateAutoIncremental';
 import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 import { generatePDF } from '../../utils/generatePdf';
 import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
+
 import toast from 'react-hot-toast';
 
 const RoadMapForm = () => {
@@ -41,6 +41,7 @@ const RoadMapForm = () => {
     price: 0,
     paymentMethod: "",
     driverId: currentUser?.uid,
+    vehicle: '',
     invoiceNumber: "",
     invoiceUrl: "",
     observations: ""  
@@ -115,6 +116,7 @@ const RoadMapForm = () => {
         paymentMethod: '',
         price: 0,
         driverId: currentUser?.uid,
+        vehicle: '',
         invoiceNumber: "",
         invoiceUrl: '',
         observations: ''
@@ -365,6 +367,24 @@ const RoadMapForm = () => {
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
+          </div>
+          <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Vehículo:
+              </label>
+              <input
+                name="vehicle"
+                type='text'
+                list='vehicles'
+                value={formData.vehicle}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+              <datalist id='vehicles'>
+                <option value="7788DTM">7788DTM</option>
+                <option value="0774HKP">0774HKP</option>
+                <option value="5817FTT">5817FTT</option>
+              </datalist>
           </div>
           <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">

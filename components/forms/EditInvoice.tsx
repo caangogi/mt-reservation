@@ -1,17 +1,11 @@
 import React, {useState} from 'react'
-import { RoadMap } from "../../backend/road-map/aplication/Roadmap";
 import { RoadMapProps } from "../../backend/road-map/domain/types"; 
 import { User } from '../../backend/share/types';
-import { v4 as uuidv4 } from 'uuid'
 import { municipios } from '../data/MarllorcaMunicipios';
 import GreatLoader from '../loaders/GreatLoader';
-import { useAuth } from '../../context/auth';
-import generateInvoiceNumber from '../../utils/generateAutoIncremental';
-import { RoadMapTemplate } from '../templates/RoadMapTemplate';
-import { generatePDF } from '../../utils/generatePdf';
-import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
 import toast from 'react-hot-toast';
 import { db } from '../../services/FirebaseService';
+import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 
 interface EditInvoiceProps {
   formData: RoadMapProps;
@@ -19,16 +13,20 @@ interface EditInvoiceProps {
 
 const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
   
-  const { currentUser, userProfile } = useAuth();
   const [loading, setLoading] = useState<boolean>(false)
   const [localFormData, setLocalFormData] = useState<RoadMapProps>(formData);
+
+  const timestamp = localFormData.date instanceof Date
+  ? localFormData.date
+  : new Date(localFormData.date.seconds * 1000 + (localFormData.date.nanoseconds || 0) / 1e6);
+
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setLocalFormData({
-      ...formData,
+      ...localFormData,
       [name]: value,
     });
   };
@@ -41,63 +39,63 @@ const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
     setLocalFormData({
       ...localFormData,
       client: {
-        ...formData.client,
+        ...localFormData.client,
         [field]: value,
       },
     });
   };
 
+  const handleDateChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    const date = localFormData.date instanceof Date
+      ? localFormData.date
+      : new Date(localFormData.date.seconds * 1000 + (localFormData.date.nanoseconds || 0) / 1e6);
+  
+    let dateStr = date.toISOString().split('T')[0];
+    let timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+  
+    if (name === 'date') {
+      const dateParts = value.split('-');
+      if (dateParts.length !== 3 || isNaN(+dateParts[0]) || isNaN(+dateParts[1]) || isNaN(+dateParts[2])) {
+        console.error('Invalid date value:', value);
+        return;
+      }
+  
+      dateStr = value;
+    } else if (name === 'time') {
+      // Valida el valor de la hora
+      const timeParts = value.split(':');
+      if (timeParts.length !== 2 || isNaN(+timeParts[0]) || isNaN(+timeParts[1])) {
+        console.error('Invalid time value:', value);
+        return;
+      }
+  
+      timeStr = value;
+    }
+  
+    // Combina la fecha y la hora en un solo objeto Date
+    const newDate = new Date(`${dateStr}T${timeStr}:00`);
+  
+    setLocalFormData({
+      ...localFormData,
+      date: newDate
+    });
+  };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-  
     try {
 
-      console.log('formData', localFormData)
+      // TODO actualizar el PDF con los datos del conductor. 
+      // const roadMapTemplate = new RoadMapTemplate(localFormData);
 
-      db.collection('road-maps').doc(localFormData.id).update(localFormData)
-
-     /*  
-      const roadMapInstance = new RoadMap();
-      const { invoiceNumber } = await generateInvoiceNumber();
-      const roadMapTemplate = RoadMapTemplate({...formData, invoiceNumber}, userProfile);
-      const pdf = await generatePDF(roadMapTemplate)
-      const url: any = await uploadPdfToStorage(pdf, formData.id)
-
-      await roadMapInstance.create({
-        ...formData, 
-        invoiceNumber, 
-        id: formData.id, 
-        invoiceUrl: url
-      }); */
-
-      /* setFormData({
-        id: '', 
-        client: {
-          name: '',
-          lastName: '',
-          documentType: '',
-          documentID: '',
-          phone: '',
-          email: '',
-          type: 'guest',
-        },
-        date: new Date(),
-        origin: '',
-        destination: '',
-        serviceType: '',
-        contractedService: '',
-        passengers: 0,
-        paymentMethod: '',
-        price: 0,
-        driverId: currentUser?.uid,
-        invoiceNumber: "",
-        invoiceUrl: '',
-      });
- */
+      await db.collection('road-maps').doc(localFormData.id).update(localFormData)
       setLoading(false);
-      toast.success('Factura actualizada correctamente')
-
+      toast.success('Hoja de ruta actualizada correctamente')
     } catch (error) {
       setLoading(false);
       toast.error('ups, algo ha ido mal. Intentelo nuevamente')
@@ -123,7 +121,33 @@ const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
               className="w-full px-3 py-2 border rounded-md"
             />
         </div>
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Fecha: {timestamp.toLocaleDateString()}
+            </label>
+            <input
+              type="date"
+              name="date"
+              value={timestamp.toLocaleDateString()}
+              onChange={handleDateChange}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+        </div>
+        <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Hora:
+            </label>
+            <input
+              type="time"
+              name="time"
+              value={timestamp.toLocaleTimeString().slice(0, 5)} 
+              onChange={handleDateChange}
+              className="w-full px-3 py-2 border rounded-md"
+            />
+        </div>
       </div>
+
+      
 
       
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -339,6 +363,36 @@ const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
+          </div>
+          <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Vehículo:
+              </label>
+              <input
+                name="vehicle"
+                type='text'
+                list='vehicles'
+                value={localFormData.vehicle}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+              <datalist id='vehicles'>
+                <option value="7788DTM">7788DTM</option>
+                <option value="0774HKP">0774HKP</option>
+                <option value="5817FTT">5817FTT</option>
+              </datalist>
+          </div>
+          <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Observaciones:
+              </label>
+              <textarea
+                name="observations"
+                inputMode="numeric"
+                value={localFormData.observations}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
           </div>
         </div>
       </div>

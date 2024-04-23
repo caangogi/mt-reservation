@@ -258,7 +258,7 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                         <p> <strong>Documento: </strong> ${roadMapProps.client.documentType}: ${roadMapProps.client.documentID}  </p> 
                       </div>
                       <div>
-                        <p> <strong>Télefono: </strong> ${roadMapProps.client.address} </p> 
+                        <p> <strong>Dirección: </strong> ${roadMapProps.client.address} </p> 
                       </div>
                       <div>
                         <p> <strong>Télefono: </strong> ${roadMapProps.client.phone} </p> 
@@ -332,7 +332,7 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               <p>Conductor: ${driver.name} ${driver.lastName}</p>
               <p>Documento: ${driver.documentID}</p>
               <p>Teléfono: ${driver.phone}</p>
-              <p>Matrícula Vehiculo Renault: 5817FTT </p>
+              <p>Matrícula Vehiculo: ${roadMapProps.vehicle}</p>
               <p>Mallorca Transfer 2023 SL</p>
               <p>Gracias por elegir nuestros servicios.</p>
             </div>

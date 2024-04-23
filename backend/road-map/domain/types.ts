@@ -15,4 +15,5 @@ export type RoadMapProps = {
     invoiceUrl: string;
     paymentMethod: string;
     observations: string;
+    vehicle: string;
 }
