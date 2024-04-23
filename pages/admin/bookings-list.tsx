@@ -1,14 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import withAuth from '../../components/hooks/WithAuth';
 import BookingTable from '../../components/tables/BookingTable'
 import { onSnapshot, collection, query } from "firebase/firestore";
 import { db } from '../../services/FirebaseService';
 import { BookingState } from '../../backend/share/types';
+import { useAuth } from '../../context/auth';
+import toast from 'react-hot-toast';
 
 const RoutesMapList: React.FC = () => {
-
+     
+    const { userProfile } = useAuth();
+    const Router = useRouter();
     const [bookingStates, setBookingStates] = useState<BookingState[]>([]);
     const bookingQ = query(collection(db, 'bookings'));
+
+
+    if (userProfile && userProfile.type !== 'admin') {
+          toast.error('Acceso denegado');
+          Router.push('/login');
+          return <></>;
+    }
 
     useEffect(() => {
       const unsubscribe = onSnapshot(bookingQ, (snapshot) => {

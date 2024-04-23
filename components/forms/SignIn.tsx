@@ -4,7 +4,7 @@ import Link from 'next/link';
 import GreatLoader from '../loaders/GreatLoader';
 
 const LoginForm: React.FC = () => {
-  const { signIn, logout, currentUser, loading } = useAuth();
+  const { signIn, logout, currentUser, userProfile, loading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -32,25 +32,31 @@ const LoginForm: React.FC = () => {
       {currentUser ? (
         <div className="text-center">
           <p className="text-blue-500">¡Hola, {currentUser.email}!</p>
-          <Link 
-            href={'/admin/routes-map-list'}
-          >
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-             Ver Rutas
-            </button>
-          </Link>
-          <br/>
-          <Link 
-            href={'/admin/bookings-list'}
-          >
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-             Ver Reservas
-            </button>
-          </Link>
+          
+          {userProfile && userProfile.type === 'admin' && (
+              <>
+                <Link 
+                  href={'/admin/routes-map-list'}
+                >
+                  <button
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
+                  Ver Rutas
+                  </button>
+                </Link>
+                <br/>
+                <Link 
+                  href={'/admin/bookings-list'}
+                >
+                  <button
+                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
+                  Ver Reservas
+                  </button>
+                </Link>
+              </>
+          )}  
+
           <br/>
           <Link 
             href={'/admin/create-road-map'}

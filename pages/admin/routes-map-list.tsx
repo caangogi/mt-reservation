@@ -1,10 +1,20 @@
+import { useRouter } from 'next/router';
 import withAuth from '../../components/hooks/WithAuth';
 import RoadmapTable from '../../components/tables/RoadMapTable';
 import { useRoadmaps } from '../../context/RoadMapsContext';
+import { useAuth } from '../../context/auth';
+import toast from 'react-hot-toast';
 
 const RoutesMapList: React.FC = () => {
 
     const { roadmaps } = useRoadmaps();
+    const { userProfile } = useAuth();
+    const Router = useRouter();
+    if (userProfile && userProfile.type !== 'admin') {
+      toast.error('Acceso denegado');
+      Router.push('/login');
+      return <></>;
+}
 
     return (
       <>

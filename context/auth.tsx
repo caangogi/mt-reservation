@@ -21,6 +21,7 @@ type AuthProviderProps = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+
   const [currentUser, setCurrentUser] = useState<firebase.User | null>(null);
   const [userProfile, setUserProfile] = useState<User | any>()
   const [loading, setLoading] = useState(false);
@@ -41,7 +42,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           email: user.email,
           type: 'driver',
         })
-      }
+      };
+      
       setLoading(false)
     } catch (error) {
       console.error('Error al registrar usuario:', error);

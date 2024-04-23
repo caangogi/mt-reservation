@@ -6,7 +6,7 @@ import { useAuth } from '../../context/auth';
 const Header = () => {
 
   const router = useRouter();
-  const { logout } = useAuth();
+  const { logout, userProfile } = useAuth();
 
   const handleLogout = () => {
      return logout()
@@ -31,24 +31,30 @@ const Header = () => {
       </div>
 
       <div className="flex items-center gap-4">
-        <button 
-          className=" text-blue-app hover:underline cursor-pointer"
-          onClick={() => router.push('/admin/create-road-map')}
-        >
-          Crear Ruta
-        </button>
-        <button 
-          className=" text-blue-app hover:underline cursor-pointer"
-          onClick={() => router.push('/admin/routes-map-list')}
-        >
-          Ver Rutas
-        </button>
-        <button 
-          className=" text-blue-app hover:underline cursor-pointer"
-          onClick={() => router.push('/admin/bookings-list')}
-        >
-          Ver Reservas
-        </button>
+
+        {userProfile && userProfile.type === 'admin' && (
+          <>
+            <button 
+              className=" text-blue-app hover:underline cursor-pointer"
+              onClick={() => router.push('/admin/create-road-map')}
+            >
+              Crear Ruta
+            </button>
+            <button 
+              className=" text-blue-app hover:underline cursor-pointer"
+              onClick={() => router.push('/admin/routes-map-list')}
+            >
+              Ver Rutas
+            </button>
+            <button 
+              className=" text-blue-app hover:underline cursor-pointer"
+              onClick={() => router.push('/admin/bookings-list')}
+            >
+              Ver Reservas
+            </button>
+          </>
+        )}
+
         <button 
           className=" text-blue-app hover:underline cursor-pointer"
           onClick={handleLogout}
