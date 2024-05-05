@@ -392,7 +392,6 @@ const RoadMapForm = () => {
               </label>
               <textarea
                 name="observations"
-                inputMode="numeric"
                 value={formData.observations}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-md"
