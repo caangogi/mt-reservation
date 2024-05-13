@@ -78,7 +78,7 @@ function ConfirmationPage() {
     <LargeCard
         img="/images/services_cards/07.png"
         title="Tu serva esta lista."
-        description="Muchas gracias por confianr en Mallorca Transfer, su servicio de transporte confiable en Mallorca. Si necesitas ayuda con tu reserva puedes contactar a tráves de WhatsApp."
+        description="Muchas gracias por confiar en Mallorca Transfer, su servicio de transporte confiable en Mallorca. Si necesitas ayuda con tu reserva puedes contactar a tráves de WhatsApp."
         buttonText="Contáctanos por WhatsApp"
         cta_position='right-40'
       />

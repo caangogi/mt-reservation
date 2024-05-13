@@ -9,7 +9,8 @@ import { UsersIcon } from '@heroicons/react/solid'
 import {FaLuggageCart} from 'react-icons/fa'
 import {GiCycling, GiSchoolBag, GiTwoCoins} from 'react-icons/gi'
 import { FaCcStripe, FaCcVisa, FaCcMastercard } from 'react-icons/fa';
-import { RiSecurePaymentLine } from 'react-icons/ri';
+import { RiSecurePaymentLine, RiFlightLandFill } from 'react-icons/ri';
+import { PiAirplaneInFlightFill } from "react-icons/pi";
 import { GiGolfFlag } from "react-icons/gi";
 import { LuBaby } from "react-icons/lu";
 
@@ -23,6 +24,8 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
   const [bookingState, setBookingState] = useState({
     startDate: new Date(),
     endDate: new Date(),
+    arrivalTime: '',
+    flightNumber: '',
     numOfGuests: 5,
     numOfBags: 0,
     numOfMiniBags: 0,
@@ -39,6 +42,7 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
     },
 
     name: '',
+    visualName: '',
     email: '',
     phone: '',
     documentType: '',
@@ -142,8 +146,6 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
     setSearchInput('PALMA CITY')
   }, [toBooking])
 
-  console.log(bookingState.babyChair)
-
 
 /*   useEffect(() => {handleSelect(selectionRange)}, [searchInput]) */
 
@@ -242,7 +244,35 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                   delay: 0.3,
                   duration: .21,
                 }}
+                className='overflow-y-scroll '
               >
+
+                <div className='flex items-center border rounded-lg mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de vuelo</h2>
+                  <UsersIcon className='h-5' />
+                  <input 
+                    type="text" 
+                    className=' w-20 border rounded-lg  pl-2 p-1 text-lg outline-none text-blue-app'
+                    name='flightNumber'
+                    value={bookingState.flightNumber}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                </div>
+
+                <div className='flex items-center border rounded-lg mb-4'>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Hora de llegada</h2>
+                  <PiAirplaneInFlightFill className='h-5' />
+                  <input 
+                    type="time" 
+                    className=' w-25 border rounded-lg  pl-2 p-1 text-lg outline-none text-blue-app'
+                    name='arrivalTime'
+                    value={bookingState.arrivalTime}
+                    onChange={bookingStateChange}
+                    min={0}
+                  />
+                </div>
+
                 <div className='flex items-center border rounded-lg mb-4'>
                   <h2 className='text-sm lg:text-lg flex-grow pl-2'>Número de pasajeros</h2>
                   <UsersIcon className='h-5' />
@@ -345,6 +375,7 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                   delay: 0.3,
                   duration: .21,
                 }}
+                className='overflow-y-scroll '
               >
                 
                 <div className='flex flex-col '>
@@ -354,6 +385,18 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                     className='border rounded-lg mb-3 pl-2 p-1 text-lg outline-none text-blue-app'
                     name='name'
                     value={bookingState.name}
+                    onChange={bookingStateChange}
+                    required
+                  />
+                </div>
+
+                <div className='flex flex-col '>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Nombre para el letrero de espera</h2>
+                  <input 
+                    type="text" 
+                    className='border rounded-lg mb-3 pl-2 p-1 text-lg outline-none text-blue-app'
+                    name='visualName'
+                    value={bookingState.visualName}
                     onChange={bookingStateChange}
                   />
                 </div>
@@ -369,6 +412,8 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                   />
                 </div>
 
+               
+
                 <div className='flex flex-col '>
                   <h2 className='text-sm lg:text-lg flex-grow  mt-1'>Número de teléfono</h2>
                   <input 
@@ -376,6 +421,33 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                     className='border rounded-lg mb-3 pl-2 p-1 text-lg outline-none text-blue-app'
                     name='phone'
                     value={bookingState.phone}
+                    onChange={bookingStateChange}
+                  />
+                </div>
+
+                <div className='flex flex-col items-left '>
+                  <h2 className='text-sm lg:text-lg flex-grow  mt-1'>Tipo de documento</h2>
+                  <input
+                    type="text"
+                    name="documentType"
+                    value={bookingState.documentType}
+                    onChange={bookingStateChange}
+                    className='border rounded-lg mb-3 pl-2 p-1 text-lg outline-none text-blue-app'
+                  />
+                  <datalist id='documentType'>
+                    <option value="DNI"></option>
+                    <option value="NIE"></option>
+                    <option value="PASAPORTE"></option>
+                  </datalist>
+                </div>
+
+                <div className='flex flex-col items-left '>
+                  <h2 className='text-sm lg:text-lg flex-grow pl-2'>Documento</h2>
+                  <input 
+                    type="text"
+                    className='border rounded-lg mb-3 pl-2 p-1 text-lg outline-none text-blue-app'
+                    name='document'
+                    value={bookingState.document}
                     onChange={bookingStateChange}
                   />
                 </div>
@@ -396,12 +468,16 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
                   <input 
                     type="checkbox" 
                     className='w-6 h-6 bg-blue-app '
-                    name='babyChair'
-                    value={bookingState.babyChair}
+                    name='termsAndConditions'
+                    value={bookingState.termsAndConditions}
                     onChange={bookingStateChange}
                     min={0}
                   />
                 </div>
+
+                <br/>
+                <br/>
+                <br/>
                 
               </motion.div>
             )}

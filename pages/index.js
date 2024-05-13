@@ -41,7 +41,6 @@ export default function Home() {
         <main className='max-w-7xl mx-auto px-1 sm:px-16 md:px-1 lg:px-8 flex flex-col'>
             <ServicesSection />
         </main>
-        <ReservaSection />
         <LargeCard 
           img='/images/large_card_image.webp'
               title='¿Inquietudes? Contáctanos por WhatsApp'
