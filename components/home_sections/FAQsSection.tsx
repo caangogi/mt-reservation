@@ -40,34 +40,40 @@ const FaqSection: React.FC = () => {
         onClick={() => handleItemClick(0)}
         />
         <FaqItem
-        query="¿Obtengo algún beneficio al reservar ida y vuelta?"
-        answer="¡Por supuesto! Al reservar tus servicios de ida y vuelta con nosotros, disfrutarás de un 10% de descuento en el total del precio. Esta es nuestra manera de agradecerte por elegirnos para tus traslados en Mallorca, desde y hacia el aeropuerto."
+        query="Cuando llegue al aeropuerto de Palma, ¿Dónde me esperará el conductor? "
+        answer="Tu conductor asignado le esperará con un letrero que contiene tu nombre o tú nombre de letrero en el Meeting Point del aeropuerto de Palma. Salida o Puerta 4. Así, podrás identificarlo fácilmente y comenzar tu traslado sin demoras. Podrás agregar tu nombre de letrero en el campo correspondiente al hacer tu reserva. En caso de tener dificultades para encontrar a tu conductor, no dudes en contactarnos  a través de nuestro contacto de WhatsApp en esta web."
         isOpen={openItem === 1}
         onClick={() => handleItemClick(1)}
         />
         <FaqItem
-            query="¿Ofrecen servicios especiales para grupos grandes o eventos?"
-            answer="Sí, contamos con una variedad de opciones para grupos grandes, incluyendo bodas, eventos corporativos y cenas. Nuestros buses y minibuses están equipados para brindar el máximo confort y eficiencia en tus eventos especiales."
-               isOpen={openItem === 2}
+        query="¿Obtengo algún beneficio al reservar ida y vuelta?"
+        answer="¡Por supuesto! Al reservar tus servicios de ida y vuelta con nosotros, disfrutarás de un 10% de descuento en el total del precio. Esta es nuestra manera de agradecerte por elegirnos para tus traslados en Mallorca, desde y hacia el aeropuerto."
+        isOpen={openItem === 2}
         onClick={() => handleItemClick(2)}
         />
         <FaqItem
-            query="¿Tienen opciones de transporte para ciclistas?"
-            answer="Por supuesto, ofrecemos traslados especializados para ciclistas, incluyendo un remolque seguro para bicicletas. Así, puedes llevar tu equipo contigo de manera cómoda y segura a cualquier parte de la isla."
+            query="¿Ofrecen servicios especiales para grupos grandes o eventos?"
+            answer="Sí, contamos con una variedad de opciones para grupos grandes, incluyendo bodas, eventos corporativos y cenas. Nuestros buses y minibuses están equipados para brindar el máximo confort y eficiencia en tus eventos especiales."
                isOpen={openItem === 3}
         onClick={() => handleItemClick(3)}
         />
         <FaqItem
+            query="¿Tienen opciones de transporte para ciclistas?"
+            answer="Por supuesto, ofrecemos traslados especializados para ciclistas, incluyendo un remolque seguro para bicicletas. Así, puedes llevar tu equipo contigo de manera cómoda y segura a cualquier parte de la isla."
+               isOpen={openItem === 4}
+        onClick={() => handleItemClick(4)}
+        />
+        <FaqItem
             query="¿Puedo reservar un traslado desde mi finca hasta cualquier lugar de la isla?"
             answer="Claro, proporcionamos traslados desde fincas a cualquier destino en la isla. Disfruta de la comodidad y flexibilidad de nuestros servicios para explorar Mallorca a tu manera."
-            isOpen={openItem === 4}
-            onClick={() => handleItemClick(4)}
+            isOpen={openItem === 5}
+            onClick={() => handleItemClick(6)}
         />
         <FaqItem
             query="¿Qué pasa si necesito un servicio de transporte de último minuto?"
             answer="Entendemos que los planes pueden cambiar inesperadamente. Ofrecemos un servicio 'Last Minute' para atender tus necesidades urgentes de transporte. Simplemente contáctanos y haremos lo posible por acomodar tu solicitud."
-               isOpen={openItem === 5}
-        onClick={() => handleItemClick(5)}
+               isOpen={openItem === 7}
+        onClick={() => handleItemClick(7)}
         />
     </div>
   );
