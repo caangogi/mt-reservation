@@ -146,10 +146,6 @@ export default function BookingForm({setToBooking, toBooking, placeholder}) {
     setSearchInput('PALMA CITY')
   }, [toBooking])
 
-
-/*   useEffect(() => {handleSelect(selectionRange)}, [searchInput]) */
-
-
   return (
     <div>
       
