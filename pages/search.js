@@ -47,44 +47,44 @@ function ConfirmationPage() {
       }
     };
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Head>
-        <title>Confirmación de Reserva - Mallorca Transfer</title>
-        <meta
-          name="description"
-          content={`Tu confirmación de reserva para traslado a ${location} desde el aeropuerto. Detalles: ${range}, ${noOfGuests} pasajeros, ${noOfBags} maletas.`}
+    return (
+      <div className="flex flex-col min-h-screen">
+        <Head>
+          <title>Confirmación de Reserva - Mallorca Transfer</title>
+          <meta
+            name="description"
+            content={`Tu confirmación de reserva para traslado a ${location} desde el aeropuerto. Detalles: ${range}, ${noOfGuests} pasajeros, ${noOfBags} maletas.`}
+          />
+          <meta
+            name="keywords"
+            content="confirmación de reserva, traslado, transporte, servicio de transporte, viaje"
+          />
+        </Head>
+        <Header placeholder={location} />
+        <main className="max-w-7xl mx-auto px-8 sm:px-16 flex-grow pt-[25vh]">
+          <section className="flex flex-col gap-6 items-center text-center">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+              Confirmación de Reserva
+            </h1>
+            <p className="text-lg">
+              Tu traslado a {location} desde el aeropuerto el {range} para {noOfGuests} pasajeros
+              con {noOfBags} maletas.
+            </p>
+            {isRoundTrip && (
+              <p className="text-lg text-green-500 font-semibold">{savingsMessage}</p>
+            )}
+          </section>
+      </main>
+      <LargeCard
+          img="/images/services_cards/07.png"
+          title="Tu reerva está lista."
+          description="Muchas gracias por confiar en Mallorca Transfer, su servicio de transporte confiable en Mallorca. Si necesitas ayuda con tu reserva puedes contactar a tráves de WhatsApp."
+          buttonText="Contáctanos por WhatsApp"
+          cta_position='right-40'
         />
-        <meta
-          name="keywords"
-          content="confirmación de reserva, traslado, transporte, servicio de transporte, viaje"
-        />
-      </Head>
-      <Header placeholder={location} />
-      <main className="max-w-7xl mx-auto px-8 sm:px-16 flex-grow pt-[25vh]">
-        <section className="flex flex-col gap-6 items-center text-center">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-            Confirmación de Reserva
-          </h1>
-          <p className="text-lg">
-            Tu traslado a {location} desde el aeropuerto el {range} para {noOfGuests} pasajeros
-            con {noOfBags} maletas.
-          </p>
-          {isRoundTrip && (
-            <p className="text-lg text-green-500 font-semibold">{savingsMessage}</p>
-          )}
-        </section>
-    </main>
-    <LargeCard
-        img="/images/services_cards/07.png"
-        title="Tu serva esta lista."
-        description="Muchas gracias por confiar en Mallorca Transfer, su servicio de transporte confiable en Mallorca. Si necesitas ayuda con tu reserva puedes contactar a tráves de WhatsApp."
-        buttonText="Contáctanos por WhatsApp"
-        cta_position='right-40'
-      />
-      <Footer />
-    </div>
-  );
+        <Footer />
+      </div>
+    );
 }
 
 export default ConfirmationPage;

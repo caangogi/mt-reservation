@@ -1,0 +1,56 @@
+
+.menuBars {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px !important;
+  position: relative;
+  transition: all 0.5s ease-in-out;
+  width: 37px;
+  order: 3;
+  cursor: pointer;
+  height: 100%;
+}
+
+.btnBurger,
+.btnBurger::before,
+.btnBurger::after {
+  width: 30px;
+  height: 2px;
+  background: #000;
+  border-radius: 2px;
+  box-shadow: 0 2px 5px rgba(255, 101, 47, .2);
+  transition: all 0.3s ease-in-out;
+}
+
+.btnBurger {
+  position: relative;
+}
+
+.btnBurger::before,
+.btnBurger::after {
+  content: '';
+  position: absolute;
+}
+
+.btnBurger::before {
+  transform: translateY(-8px);
+}
+
+.btnBurger::after {
+  transform: translateY(8px);
+}
+
+.menuBars.open .btnBurger {
+  transform: translateX(-50px);
+  background: transparent;
+  box-shadow: none;
+}
+
+.menuBars.open .btnBurger::before {
+  transform: rotate(45deg) translate(35px, -35px);
+}
+
+.menuBars.open .btnBurger::after {
+  transform: rotate(-45deg) translate(35px, 35px);
+}

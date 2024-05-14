@@ -1,9 +1,11 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useRouter } from 'next/navigation'
 import { auth, db } from '../services/FirebaseService';
 import { doc, getDoc } from 'firebase/firestore';
 import { CreateUser } from '../backend/user/aplication/Create';
 import { User } from '../backend/share/types';
 import firebase from 'firebase/compat';
+
 
 type AuthContextType = {
   currentUser: firebase.User | null;
@@ -26,6 +28,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [userProfile, setUserProfile] = useState<User | any>()
   const [loading, setLoading] = useState(false);
   const createUser = new CreateUser();
+  const router = useRouter();
 
   const signup = async (email: string, password: string, user: User): Promise<void> => {
     setLoading(true)
@@ -68,6 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async (): Promise<void> => {
     try {
       await auth.signOut();
+      router.push('/login');
     } catch (error) {
       console.error('Error al cerrar sesión:', error);
       throw error;
@@ -97,6 +101,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setCurrentUser(user);
       getUserById(user?.uid)
       setLoading(false);
+      router.push('/admin/create-road-map');
     });
     return () => unsubscribe();
   }, []);

@@ -1,0 +1,47 @@
+@import './Utils.module.scss';
+
+.sidebar {
+  background-color: #fff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  height: 90vh;
+  width: 20vw;
+  padding: 2rem 1rem;
+  top: 10vh;
+  z-index: 100;
+
+  @include isMobile {
+    display: block;
+    padding-left: 1rem;
+    padding-top: 1rem;
+    width: 100vw;
+    left: 0;
+  }
+
+  .toggle {
+    display: none;
+  }
+
+}
+
+.sidebar_container{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    height: 100%;
+    overflow-y: scroll;
+    padding-right: 1rem;
+  }
+
+  .burger_button{
+    display: none;
+    color: var(--color-primary);
+    cursor: pointer;
+    z-index: 10000;
+    position: fixed;
+    right:2rem;
+    top: 1.5rem;
+    border: none;
+    @include isMobile {
+      display: flex;
+    }
+  }

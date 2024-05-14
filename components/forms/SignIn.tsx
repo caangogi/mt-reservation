@@ -2,9 +2,12 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/auth';
 import Link from 'next/link';
 import GreatLoader from '../loaders/GreatLoader';
+import { useRouter } from 'next/navigation';
 
 const LoginForm: React.FC = () => {
-  const { signIn, logout, currentUser, userProfile, loading } = useAuth();
+
+  const { signIn, currentUser, loading } = useAuth();
+  const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -18,64 +21,13 @@ const LoginForm: React.FC = () => {
     }
   };
 
-  const handleLogout = async () => {
-    setError('');
-    try {
-      await logout();
-    } catch (error) {
-      setError('Error al cerrar sesión');
-    }
-  };
+  if (currentUser) {
+    router.push('/admin/create-road-map');
+    return null;
+  }
 
   return (
     <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
-      {currentUser ? (
-        <div className="text-center">
-          <p className="text-blue-500">¡Hola, {currentUser.email}!</p>
-          
-          {userProfile && userProfile.type === 'admin' && (
-              <>
-                <Link 
-                  href={'/admin/routes-map-list'}
-                >
-                  <button
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-                  >
-                  Ver Rutas
-                  </button>
-                </Link>
-                <br/>
-                <Link 
-                  href={'/admin/bookings-list'}
-                >
-                  <button
-                    className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-                  >
-                  Ver Reservas
-                  </button>
-                </Link>
-              </>
-          )}  
-
-          <br/>
-          <Link 
-            href={'/admin/create-road-map'}
-          >
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-             Crear Ruta
-            </button>
-          </Link>
-          <br/>
-          <button
-            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            onClick={handleLogout}
-          >
-            Cerrar sesión
-          </button>
-        </div>
-      ) : (
         <div>
           <p className="text-center text-lg font-bold mb-4">Iniciar Sesión</p>
           <label className="block mb-2">Email:</label>
@@ -94,14 +46,14 @@ const LoginForm: React.FC = () => {
           />
          {!loading ? 
            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md"
+              className="bg-blue-500 text-white px-4 py-2 rounded-md w-full"
               onClick={handleSignIn}
             >
               {'Iniciar sesión'}
             </button>
           :
           <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md flex"
+              className="bg-blue-500 text-white text-center px-4 py-2 rounded-md flex w-full"
           >
             {'Un momento...'} <GreatLoader />
           </button>
@@ -113,7 +65,6 @@ const LoginForm: React.FC = () => {
             </Link>
           </p>
         </div>
-      )}
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
