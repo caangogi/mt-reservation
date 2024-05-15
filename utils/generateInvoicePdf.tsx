@@ -1,7 +1,9 @@
+import { RoadMapProps } from '../backend/road-map/domain/types';
+import { InvoiceTemplate } from '../components/templates/InvoiceTemplate';
 import jsPDF from 'jspdf';  
 import html2canvas from 'html2canvas';
 
-export const generatePDF = async (template: string) => {
+export const generateInvoicePDF = async (template: string) => {
     try {
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = template;
@@ -31,8 +33,9 @@ export const generatePDF = async (template: string) => {
         const file = new File([pdfBlob], 'signed-contract.pdf', {
             type: 'application/pdf',
         });
-        
-        return file;
+        const url = URL.createObjectURL(file);
+        window.open(url);
+        return { file, url };
 
 
         } catch (error) {

@@ -101,7 +101,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setCurrentUser(user);
       getUserById(user?.uid)
       setLoading(false);
-      router.push('/admin/create-road-map');
     });
     return () => unsubscribe();
   }, []);

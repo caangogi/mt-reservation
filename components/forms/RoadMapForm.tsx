@@ -12,13 +12,12 @@ import { generatePDF } from '../../utils/generatePdf';
 import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
 
 import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation';
 
 const RoadMapForm = () => {
   const { currentUser, userProfile } = useAuth();
   const { lastInvoiceNumber } = useRoadmaps();
-
-  console.log('lastInvoiceNumber:', lastInvoiceNumber);
-
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false)
   const [formData, setFormData] = useState<RoadMapProps>({
     id: uuidv4(),
@@ -85,14 +84,18 @@ const RoadMapForm = () => {
       : 'INV-00001';
 
       const roadMapTemplate = RoadMapTemplate({...formData, invoiceNumber}, userProfile);
-      const pdf = await generatePDF(roadMapTemplate)
-      const url: any = await uploadPdfToStorage(pdf, formData.id)
+      const pdfResul = await generatePDF(roadMapTemplate)
+
+      if(!pdfResul) throw new Error('Error al generar el PDF');
+      
+      const file  = pdfResul;
+      const uploadUrl: any = await uploadPdfToStorage(file, formData.id)
 
       await roadMapInstance.create({
         ...formData, 
         invoiceNumber, 
         id: formData.id, 
-        invoiceUrl: url
+        invoiceUrl: uploadUrl
       });
 
       setFormData({
@@ -123,7 +126,9 @@ const RoadMapForm = () => {
       });
 
       setLoading(false);
-      toast.success('Hoja de ruta creada correctamente')
+      toast.success('Hoja de ruta creada correctamente');
+
+      router.push(uploadUrl);
 
     } catch (error) {
       setLoading(false);
@@ -419,6 +424,7 @@ const RoadMapForm = () => {
           </div>
         }
       </div>
+      
     </form>
   );
 };

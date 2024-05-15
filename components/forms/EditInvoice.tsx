@@ -9,9 +9,10 @@ import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 
 interface EditInvoiceProps {
   formData: RoadMapProps;
+  closeModal: () => void;
 }
 
-const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
+const EditInvoice: React.FC<EditInvoiceProps> = ({formData, closeModal}) => {
   
   const [loading, setLoading] = useState<boolean>(false)
   const [localFormData, setLocalFormData] = useState<RoadMapProps>(formData);
@@ -398,15 +399,24 @@ const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
       </div>
       
 
-      
       <div className="flex justify-center">
         {!loading ? 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full"
-          >
-            Actualizar hoja de ruta
-          </button>
+          <div className='flex flex-col gap-5'>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full"
+            >
+              Actualizar hoja de ruta
+            </button>
+
+            <button
+            type="button"
+            className=" bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-md w-full"
+              onClick={closeModal}
+            >
+              Cancelar edición
+            </button>
+          </div>
         :
           <div
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex justify-center w-full"
@@ -415,6 +425,7 @@ const EditInvoice: React.FC<EditInvoiceProps> = ({formData}) => {
             <GreatLoader />
           </div>
         }
+
       </div>
     </form>
   );

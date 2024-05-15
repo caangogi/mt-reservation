@@ -3,9 +3,11 @@ import { useAuth } from '../../context/auth';
 import { User } from '../../backend/share/types';
 import Link from 'next/link';
 import GreatLoader from '../loaders/GreatLoader';
+import { useRouter } from 'next/navigation';
 
 const SignupForm: React.FC = () => {
   const { signup, currentUser, loading } = useAuth();
+  const router = useRouter();
   const [user, setUser] = useState<User>({
     name: '',
     lastName: '',
@@ -35,42 +37,15 @@ const SignupForm: React.FC = () => {
     }));
   };
 
+  if (currentUser) {
+    router.push('/admin/create-road-map');
+    return null;
+  }
+
+
   return (
     <div className="max-w-md mx-auto mt-8 p-4 bg-white rounded-md shadow-md">
-      {currentUser ? (
-        <div className="text-center">
-          <p className="text-blue-500">¡Hola, {currentUser.email}!</p>
-          <Link
-            href={'/admin/create-road-map'}
-          >
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-             Crear Ruta
-            </button>
-          </Link>
-          <br/>
-          <Link 
-            href={'/admin/bookings-list'}
-          >
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-             Ver Reservas
-            </button>
-          </Link>
-          <br/>
-          <Link 
-            href={'/admin/routes-map-list'}
-          >
-            <button
-              className="mt-4 bg-blue-500 text-white px-4 py-2 rounded-md"
-            >
-             Ver Rutas
-            </button>
-          </Link>
-        </div>
-      ) : (
+     
         <div>
           <p className="text-center text-lg font-bold mb-4">Registro</p>
           <label className="block mb-2">Email:</label>
@@ -130,7 +105,7 @@ const SignupForm: React.FC = () => {
           />
           {!loading ? 
           <button
-            className="bg-green-500 text-white px-4 py-2 rounded-md"
+            className="bg-green-500 text-white px-4 py-2 rounded-md w-full"
             onClick={handleSignup}
           >
             Registrarse
@@ -149,7 +124,6 @@ const SignupForm: React.FC = () => {
             </Link>
           </p>
         </div>
-      )}
       {error && <p className="text-red-500 mt-4">{error}</p>}
     </div>
   );
