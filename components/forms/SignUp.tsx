@@ -4,6 +4,7 @@ import { User } from '../../backend/share/types';
 import Link from 'next/link';
 import GreatLoader from '../loaders/GreatLoader';
 import { useRouter } from 'next/navigation';
+import { FaEye, FaEyeSlash  } from "react-icons/fa";
 
 const SignupForm: React.FC = () => {
   const { signup, currentUser, loading } = useAuth();
@@ -19,6 +20,7 @@ const SignupForm: React.FC = () => {
   });
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleSignup = async () => {
     setError('');
@@ -57,12 +59,22 @@ const SignupForm: React.FC = () => {
             className="w-full px-3 py-2 border rounded-md mb-4"
           />
           <label className="block mb-2">Contraseña:</label>
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-3 py-2 border rounded-md mb-4"
-          />
+          <div className='flex items-center justify-center mb-4 gap-1 relative'>
+            <input
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border rounded-md "
+            />
+            <button onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: "absolute",
+                right: "10px",
+              }}
+            >
+              {showPassword ? <FaEyeSlash /> : <FaEye />}
+            </button>
+          </div>
           <label className="block mb-2">Nombre:</label>
           <input
             type="text"
