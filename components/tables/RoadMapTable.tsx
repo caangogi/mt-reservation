@@ -17,7 +17,7 @@ import { useRoadmaps } from '../../context/RoadMapsContext';
 const RoadmapTable: React.FC = () => {
 
   const {userProfile} = useAuth();
-  const { roadmaps, loadMore } = useRoadmaps();
+  const { roadmaps, loadMore, allDocsLoaded } = useRoadmaps();
   const [searchTerm, setSearchTerm] = useState('');
   const [editableInvoiceId, setEditableInvoiceId] = useState<string | null>(null);
   const [newInvoiceNumber, setNewInvoiceNumber] = useState<string>();
@@ -291,14 +291,18 @@ const RoadmapTable: React.FC = () => {
     </div>
 
 
-      <div className="flex justify-center mt-4">
-        <button
-          className="bg-blue-600 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
-          onClick={loadMore}
-        >
-          Cargar más hojas de ruta
-        </button>
-      </div>
+    {allDocsLoaded ? (
+        <p className="text-center mt-4">Todas las hojas de ruta han sido cargadas</p>
+      ): (
+        <div className="flex justify-center mt-8">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={loadMore}
+          >
+            Cargar más hojas de ruta
+          </button>
+        </div>
+      )}
     </div>
   );
 };

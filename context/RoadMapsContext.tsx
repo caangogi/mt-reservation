@@ -9,6 +9,7 @@ interface RoadmapContextProps {
   roadmaps: RoadMapProps[];
   lastInvoiceNumber: string | null;
   loadMore: () => void;
+  allDocsLoaded: boolean;
 }
 
 const RoadmapContext = createContext<RoadmapContextProps | undefined>(undefined);
@@ -21,7 +22,7 @@ export const RoadmapProvider: React.FC = ({ children }: { children?: React.React
 
   const loadMore = () => {
 
-    if (allDocsLoaded) return toast('Todas las hojas de ruta han sido cargadas', { icon: '🚚' });
+    if (allDocsLoaded) return;
 
     let q = query(collection(db, 'road-maps'), orderBy('invoiceNumber', 'desc'), limit(10));
     if (lastDoc) {
@@ -56,7 +57,7 @@ export const RoadmapProvider: React.FC = ({ children }: { children?: React.React
   }, []);
 
   return (
-    <RoadmapContext.Provider value={{ roadmaps, lastInvoiceNumber, loadMore }}>
+    <RoadmapContext.Provider value={{ roadmaps, lastInvoiceNumber, loadMore, allDocsLoaded }}>
       {children}
     </RoadmapContext.Provider>
   );
