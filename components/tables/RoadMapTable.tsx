@@ -12,14 +12,12 @@ import { BiSolidFilePdf } from "react-icons/bi";
 import { GiRoad } from "react-icons/gi";
 import { MdDeleteForever, MdOutlineEditRoad  } from "react-icons/md";
 import EditInvoice from '../forms/EditInvoice';
+import { useRoadmaps } from '../../context/RoadMapsContext';
 
-interface RoadmapTableProps {
-  roadmaps: RoadMapProps[];
-}
-
-const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
+const RoadmapTable: React.FC = () => {
 
   const {userProfile} = useAuth();
+  const { roadmaps, loadMore } = useRoadmaps();
   const [searchTerm, setSearchTerm] = useState('');
   const [editableInvoiceId, setEditableInvoiceId] = useState<string | null>(null);
   const [newInvoiceNumber, setNewInvoiceNumber] = useState<string>();
@@ -30,8 +28,11 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
 
   const filteredRoadmaps = roadmaps.filter((roadmap) => {
     const clientName = `${roadmap.client.name} ${roadmap.client.lastName}`.toLowerCase();
-    return clientName.includes(searchTerm.toLowerCase());
-  })
+    const invoiceNumber = roadmap.invoiceNumber.toString().toLowerCase();
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+  
+    return clientName.includes(lowerCaseSearchTerm) || invoiceNumber.includes(lowerCaseSearchTerm);
+  });
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -89,9 +90,6 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
     }
   };
 
-
-  
-
   const handleEditButtonClick = (roadmap: RoadMapProps) => {
     setSelectedRoadmap(roadmap);
     setEditModalOpen(true); 
@@ -102,45 +100,44 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
   };
 
   return (
-    <div className="overflow-x-auto">
-      <div className="mb-4">
+    <div>
+       <div className="mb-4">
         <label htmlFor="search" className="sr-only">
           Search
         </label>
         <input
           type="text"
           id="search"
-          placeholder="Buscar por nombre de cliente"
-          className="p-2 border border-gray-300 w-72"
+          placeholder="Buscar por nombre de cliente o número de factura"
+          className="p-2 border border-gray-300 w-full "
           value={searchTerm}
           onChange={handleSearchChange}
         />
       </div>
-    <table className="min-w-full bg-white border border-gray-300 rounded-lg">
-      <thead>
-        <tr>
-          <th className="py-2 px-4 border text-start">Factura</th>
-          <th className="py-2 px-4 border text-start">Nombre</th>
-          <th className="py-2 px-4 border text-start">Origen</th>
-          <th className="py-2 px-4 border text-start">Destino</th>
-          <th className="py-2 px-4 border text-start">Fecha</th>
-          <th className="py-2 px-4 border text-start">Servicio</th>
-          <th className="py-2 px-4 border text-start">Pasajeros</th>
-          <th className="py-2 px-4 border text-start flex justify-between">Precio</th>
-          <th className="py-2 px-4 border text-start">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
+    <div className="overflow-x-auto">
+      <table className="min-w-full bg-white border border-gray-300 rounded-lg">
+        <thead>
+          <tr>
+            <th className="py-2 px-4 border text-start">Factura</th>
+            <th className="py-2 px-4 border text-start">Nombre</th>
+            <th className="py-2 px-4 border text-start">Origen</th>
+            <th className="py-2 px-4 border text-start">Destino</th>
+            <th className="py-2 px-4 border text-start">Fecha</th>
+            <th className="py-2 px-4 border text-start">Servicio</th>
+            <th className="py-2 px-4 border text-start">Pasajeros</th>
+            <th className="py-2 px-4 border text-start flex justify-between">Precio</th>
+            <th className="py-2 px-4 border text-start">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredRoadmaps.map((roadmap) => {
+            const timestamp = roadmap.date instanceof Date
+            ? roadmap.date
+            : new Date(roadmap.date.seconds * 1000 + (roadmap.date.nanoseconds || 0) / 1e6);
 
-        {filteredRoadmaps.map((roadmap) => {
-          const timestamp = roadmap.date instanceof Date
-          ? roadmap.date
-          : new Date(roadmap.date.seconds * 1000 + (roadmap.date.nanoseconds || 0) / 1e6);
-
-          const date = timestamp.toLocaleDateString();
-          const time = timestamp.toLocaleTimeString();
-          return(
-            <>
+            const date = timestamp.toLocaleDateString();
+            const time = timestamp.toLocaleTimeString();
+            return(
               <tr key={roadmap.id}>
                 <td className="py-2 px-4 border text-start">
                     {editableInvoiceId === roadmap.id ? (
@@ -244,57 +241,64 @@ const RoadmapTable: React.FC<RoadmapTableProps> = ({ roadmaps }) => {
 
                 </td>
               </tr>
+            )
+          })}
+        </tbody>
+      </table>
 
-              {isModalOpen && selectedRoadmap && (
-                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
-                  <div className="absolute bg-slate-500 opacity-75 w-full h-full"></div>
-                  <div className="bg-white p-8 rounded shadow-lg z-10">
-                    <p className="mb-4">Estas a punto de eliminar la factura <strong>Nº{selectedRoadmap.invoiceNumber}</strong> <br/> ¿Estás seguro que deseas continuar? </p>
-                    {!loading ?
-                      <>
-                        <button
-                          onClick={() => selectedRoadmap.id && handleDelete(selectedRoadmap.id)}
-                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4"
-                        >
-                          Sí, eliminar
-                        </button>
-                        <button
-                          onClick={handleModalClose}
-                          className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
-                        >
-                          Cancelar
-                        </button>
-                      </>
-                    : 
-                      <>
-                        <p className="mb-4"> Estamos trabajando en ello, un momento...  </p>
-                        <GreatLoader/>
-                      </>
-                    }
-                  </div>
-                </div>
-              )}
-
-              
-            </>
-          )
-        })}
-      </tbody>
-    </table>
-
-    {isEditModalOpen && selectedRoadmap && (
-      <div className="fixed top-0 left-0 w-full h-full flex items-start justify-center">
-        <div className="absolute bg-slate-500 opacity-75 w-full h-full" onClick={handleEditModalClose}></div>
-        <div className="bg-white p-8 rounded shadow-lg z-10 overflow-y-scroll h-full">
-          <EditInvoice 
-            formData={selectedRoadmap}
-            closeModal={handleEditModalClose}
-
-          />
+      {isModalOpen && selectedRoadmap && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center">
+          <div className="absolute bg-slate-500 opacity-75 w-full h-full"></div>
+          <div className="bg-white p-8 rounded shadow-lg z-10">
+            <p className="mb-4">Estas a punto de eliminar la factura <strong>Nº{selectedRoadmap.invoiceNumber}</strong> <br/> ¿Estás seguro que deseas continuar? </p>
+            {!loading ?
+              <>
+                <button
+                  onClick={() => selectedRoadmap.id && handleDelete(selectedRoadmap.id)}
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mr-4"
+                >
+                  Sí, eliminar
+                </button>
+                <button
+                  onClick={handleModalClose}
+                  className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  Cancelar
+                </button>
+              </>
+            : 
+              <>
+                <p className="mb-4"> Estamos trabajando en ello, un momento...  </p>
+                <GreatLoader/>
+              </>
+            }
+          </div>
         </div>
+      )}
+
+      {isEditModalOpen && selectedRoadmap && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-start justify-center">
+          <div className="absolute bg-slate-500 opacity-75 w-full h-full" onClick={handleEditModalClose}></div>
+          <div className="bg-white p-8 rounded shadow-lg z-10 overflow-y-scroll h-full">
+            <EditInvoice 
+              formData={selectedRoadmap}
+              closeModal={handleEditModalClose}
+
+            />
+          </div>
+        </div>
+      )}
+    </div>
+
+
+      <div className="flex justify-center mt-4">
+        <button
+          className="bg-blue-600 hover:bg-blue-400 text-white font-bold py-2 px-4 rounded"
+          onClick={loadMore}
+        >
+          Cargar más hojas de ruta
+        </button>
       </div>
-    )}
-    
     </div>
   );
 };
