@@ -309,7 +309,7 @@ const RoadmapTable: React.FC = () => {
                     <td className="py-2 px-4 border text-start">{date} / {time}</td>
                     <td className="py-2 px-4 border text-start">{roadmap.serviceType}</td>
                     <td className="py-2 px-4 border text-end">{roadmap.passengers}</td>
-                    <td className="py-2 px-4 border text-end">{formatterEuro.format(roadmap.price !== "" ? Number(roadmap.price) : 0)}</td>
+                    <td className="py-2 px-4 border text-end">{formatterEuro.format(String(roadmap.price) !== "" ? Number(roadmap.price) : 0)}</td>
                     <td className="py-2 px-2 border text-start flex justify-center gap-1 w-fit">
 
                       <div className=' flex flex-col justify-center text-center'>
