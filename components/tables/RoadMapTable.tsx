@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { doc, updateDoc } from 'firebase/firestore';
-import { db, storage } from '../../services/FirebaseService';
+import { doc, updateDoc , deleteDoc } from "firebase/firestore";
+import { ref, deleteObject } from "firebase/storage";
+import { db, storage } from "../../services/FirebaseService";
 import Papa from 'papaparse'
 import { RoadMapProps } from '../../backend/road-map/domain/types';
 import { formatterEuro } from '../../utils/formatEur';
@@ -78,19 +79,23 @@ const RoadmapTable: React.FC = () => {
   };
 
   const handleDelete = async (roadMapId: string) => {
-    setLoading(true)
+    setLoading(true);
     try {
-
-      await db.collection('road-maps').doc(roadMapId).delete();
-      await storage.ref(`invoices/${roadMapId}`).delete();
-
-      toast.success('Factura eliminada correctamente');
+      // Eliminar documento de Firestore
+      const docRef = doc(db, "road-maps", roadMapId);
+      await deleteDoc(docRef);
+  
+      // Eliminar archivo del Storage
+      const fileRef = ref(storage, `invoices/${roadMapId}`);
+      await deleteObject(fileRef);
+  
+      toast.success("Factura eliminada correctamente");
+    } catch (error) {
+      toast.error("Ups, ha ocurrido algo inesperado. Inténtalo nuevamente.");
+      console.error("Error al eliminar el elemento:", error);
+    } finally {
       setLoading(false);
       handleModalClose();
-    } catch (error) {
-      toast.error('Ups, ha ocurrido algo inesperado. Intentalo nuevamente.')
-      setLoading(false);
-      console.error('Error al eliminar el elemento:', error);
     }
   };
 
@@ -159,28 +164,35 @@ const RoadmapTable: React.FC = () => {
     link.click();
   }
 
-
   useEffect(() => {
+    let isMounted = true; // para evitar actualizar el estado si el componente se desmonta
     const fetchDriverNames = async () => {
+      // Usamos el estado actual de driverNames como base
       const newDriverNames = { ...driverNames };
-  
+      let didChange = false;
+
+      // Solo recorremos aquellos roadmaps con driverId que no hayamos consultado aún
       for (const roadmap of filteredRoadmaps) {
-        if (!roadmap.driverId) continue; // Cambiado de 'return' a 'continue'
-  
-        if (!newDriverNames[roadmap.driverId]) {
+        if (roadmap.driverId && !newDriverNames[roadmap.driverId]) {
           const user = await getUserData(roadmap.driverId);
-  
           if (user) {
-            newDriverNames[roadmap.driverId] = user.name; 
+            newDriverNames[roadmap.driverId] = user.name;
+            didChange = true;
           }
         }
       }
-  
-      setDriverNames(newDriverNames);
+      // Si hubo un cambio y el componente sigue montado, actualizamos el estado
+      if (didChange && isMounted) {
+        setDriverNames(newDriverNames);
+      }
     };
-  
-    fetchDriverNames(); 
-  }, [filteredRoadmaps]);
+
+    fetchDriverNames();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [filteredRoadmaps, getUserData]);
 
   return (
   <div>

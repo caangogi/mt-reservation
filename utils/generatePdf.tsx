@@ -31,8 +31,9 @@ export const generatePDF = async (template: string) => {
         const file = new File([pdfBlob], 'signed-contract.pdf', {
             type: 'application/pdf',
         });
+        const url = URL.createObjectURL(file);
         
-        return file;
+        return { file, url };
 
 
         } catch (error) {

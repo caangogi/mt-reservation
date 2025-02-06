@@ -17,3 +17,4 @@ export type RoadMapProps = {
     observations: string;
     vehicle: string;
 }
+

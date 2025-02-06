@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import Logo from '/public/images/logo_02.png';
+import Logo from '/public/images/logo_new.jpg';
 import { useAuth } from '../../context/auth';
 import BurgerButton from '../buttons/BurgerButton';
 import { motion } from 'framer-motion';
@@ -37,14 +37,10 @@ const Header = () => {
       >
         <Image 
           src={Logo}
-          width={40}
-          height={40}
+          width={100}
+          height={100}
           alt='Mallorca Transfer Logo'
         />
-        <div className='flex flex-col'>
-            <p className='text-xl text-blue-app'>Mallorca Transfer</p>
-            <span className='text-xs text-blue-app'>Big One For Groups</span>
-        </div>
       </div>
 
       {userProfile && userProfile.type === 'admin' ? (

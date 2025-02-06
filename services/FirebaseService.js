@@ -1,9 +1,10 @@
-import firebase from "firebase/compat/app"
-import "firebase/compat/auth";
-import "firebase/compat/firestore";
-import "firebase/compat/storage";
 
-export const app = firebase.initializeApp({
+import { initializeApp } from "firebase/app"
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth"
+import { getStorage } from "firebase/storage"
+ 
+export const app = initializeApp({
     apiKey: "AIzaSyCUM4Q0iS0zSyTTIVYIPgtD_D4_4hPwM7g",
     authDomain: "mallorca-transfer-demo.firebaseapp.com",
     projectId: "mallorca-transfer-demo",
@@ -13,8 +14,9 @@ export const app = firebase.initializeApp({
     measurementId: "G-LT3X530NFT"
 })
 
-const auth = app.auth();
-const db = app.firestore();
-const storage = app.storage();
+const auth = getAuth(app)
+const db = getFirestore(app)
+const storage = getStorage(app)
+
 export {auth, db, storage };
 export default app; 

@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useRouter } from 'next/router';
 import { useRoadmaps } from '../../context/RoadMapsContext';
 import { RoadMap } from "../../backend/road-map/aplication/Roadmap";
 import { RoadMapProps } from "../../backend/road-map/domain/types"; 
@@ -10,17 +11,18 @@ import { useAuth } from '../../context/auth';
 import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 import { generatePDF } from '../../utils/generatePdf';
 import { uploadPdfToStorage } from '../../utils/uploadPdfToStorage';
-
+import { FaRegFilePdf } from "react-icons/fa";
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
 
 const RoadMapForm = () => {
+
   const { currentUser, userProfile } = useAuth();
-  const { lastInvoiceNumber } = useRoadmaps();
-  const router = useRouter();
+  const { roadmaps, lastInvoiceNumber } = useRoadmaps();
+  const userRoadmaps = roadmaps.filter(roadMap => currentUser?.uid === roadMap.driverId);
   const [loading, setLoading] = useState<boolean>(false)
+  const [onProgress, setOnProgress] = useState<number>(0)  
   const [formData, setFormData] = useState<RoadMapProps>({
-    id: '',
+    id: "",
     client: {
       name: '',
       lastName: '',
@@ -34,18 +36,18 @@ const RoadMapForm = () => {
     date: new Date(),
     origin: '',
     destination: '',
-    serviceType: '',
+    serviceType: 'Discresional',
     contractedService: '',
-    passengers: 0,
+    passengers: 4,
     price: 0,
     paymentMethod: "",
     driverId: currentUser?.uid,
     vehicle: '',
     invoiceNumber: "",
     invoiceUrl: "",
-    observations: ""  
+    observations: ""
   });
-  
+
   useEffect(() => {
     setFormData(prevState => ({ ...prevState, id: uuidv4() }));
   }, []);
@@ -56,7 +58,7 @@ const RoadMapForm = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name === 'passengers' || name === 'price' ? Number(value) : value,
     });
   };
 
@@ -74,12 +76,27 @@ const RoadMapForm = () => {
     });
   };
 
-
+  const uploadPdfAndGetUrl = async (pdf: File, id: string): Promise<string> => {
+    const uploadUrl = await uploadPdfToStorage(pdf, id, setOnProgress);
+  
+    if (!uploadUrl) {
+      toast.error('Ha fallado la carda del documente PDF, intentelo nuevamente');
+      throw new Error(`Failed to upload PDF with id ${id}`);
+    }
+  
+    return uploadUrl;
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
+
     e.preventDefault();
     setLoading(true);
   
     try {
+
+      if(!userProfile){
+        return toast.error("No hay perfil")
+      }
       
       const roadMapInstance = new RoadMap();
 
@@ -88,20 +105,31 @@ const RoadMapForm = () => {
       : 'INV-00001';
 
       const roadMapTemplate = RoadMapTemplate({...formData, invoiceNumber}, userProfile);
-      const pdfResul = await generatePDF(roadMapTemplate)
+      const pdfResult = await generatePDF(roadMapTemplate);
 
-      if(!pdfResul) throw new Error('Error al generar el PDF');
-      
-      const file  = pdfResul;
-      const uploadUrl: any = await uploadPdfToStorage(file, formData.id)
+      if (!pdfResult) {
+        throw new Error('Failed to generate PDF');
+      };
+
+      const { file: pdf, url } = pdfResult;
+
+      if(!formData.id) throw new Error('Failed to generate PDF');
+
+      const uploadUrl = await uploadPdfAndGetUrl(pdf, formData.id)
+
+      if (!uploadUrl) {
+        toast.error('Ha fallado la carda del documente PDF, intentelo nuevamente')
+        throw new Error('Failed to upload PDF');
+      };
 
       await roadMapInstance.create({
         ...formData, 
-        invoiceNumber, 
+        invoiceNumber: invoiceNumber, 
         id: formData.id, 
         invoiceUrl: uploadUrl
       });
-
+      
+      toast.success('Hoja de ruta creada correctamente');
       setFormData({
         id: uuidv4(), 
         client: {
@@ -117,45 +145,43 @@ const RoadMapForm = () => {
         date: new Date(),
         origin: '',
         destination: '',
-        serviceType: '',
+        serviceType: 'Discresional',
         contractedService: '',
-        passengers: 0,
+        passengers: 4,
         paymentMethod: '',
-        price: 0,
+        price:0,
         driverId: currentUser?.uid,
         vehicle: '',
         invoiceNumber: "",
-        invoiceUrl: '',
-        observations: ''
+        invoiceUrl: "",
+        observations: ""
       });
 
       setLoading(false);
-      toast.success('Hoja de ruta creada correctamente');
-
-      router.push(uploadUrl);
 
     } catch (error) {
       setLoading(false);
-      toast.error('ups, algo ha ido mal. Intentelo nuevamente')
-    }
+      console.error(error);
+      toast.error('ups, algo ha ido mal. Intentelo nuevamente');
+    };
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="mx-auto max-w-4xl p-6 bg-white rounded-md shadow-lg flex flex-col gap-3"
-    >
-      <div className="mb-4">
-        <h1 className="text-gray-700 text-lg font-bold ">Hoja de ruta</h1>
-      </div>
+    <div>
+      <form
+        onSubmit={handleSubmit}
+        className="mx-auto max-w-4xl p-6 bg-white rounded-md shadow-lg flex flex-col gap-3"
+      >
+        <div className="mb-4">
+          <h1 className="text-gray-700 text-lg font-bold ">Hoja de ruta</h1>
+        </div>
 
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className='border p-4 rounded-md'>
-          <div className="mb-4">
-            <h2 className="text-gray-700 text-lg font-bold ">Datos del cliente</h2>
-          </div>
-          <div className="mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className='border p-4 rounded-md'>
+            <div className="mb-4">
+              <h2 className="text-gray-700 text-lg font-bold ">Datos del cliente</h2>
+            </div>
+            <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Nombre:
             </label>
@@ -250,186 +276,214 @@ const RoadMapForm = () => {
               className="w-full px-3 py-2 border rounded-md"
             />
           </div>
-
-        </div>
-
-        <div className='border p-4 rounded-md'>
-          <div className="mb-4">
-            <h2 className="text-gray-700 text-lg font-bold ">Datos del servicio</h2>
-          </div>
-          <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Origen:
-          </label>
-          <input
-            id='origin'
-            type="text"
-            name="origin"
-            list="municipiosOrigenList"
-            value={formData.origin}
-            onChange={handleInputChange}
-            className="w-full px-3 py-2 border rounded-md"
-          />
-          <datalist id='municipiosOrigenList'>
-            {municipios.map((item) => <option key={item} value={item}> {item} </option>)}
-          </datalist>
+            
+        
           </div>
 
-          <div className="mb-6">
+          <div className='border p-4 rounded-md'>
+            <div className="mb-4">
+              <h2 className="text-gray-700 text-lg font-bold ">Datos del servicio</h2>
+            </div>
+            <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Destino:
+              Origen:
             </label>
             <input
-              id="destination"
+              id='origin'
               type="text"
-              name="destination"
-              list="municipiosDestinoList"
-              value={formData.destination}
+              name="origin"
+              list="municipiosOrigenList"
+              value={formData.origin}
               onChange={handleInputChange}
               className="w-full px-3 py-2 border rounded-md"
             />
-            <datalist id='municipiosDestinoList'>
+            <datalist id='municipiosOrigenList'>
               {municipios.map((item) => <option key={item} value={item}> {item} </option>)}
             </datalist>
-          </div>
+            </div>
 
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Servicio contratado
-            </label>
-            <input
-              type="text"
-              name="contractedService"
-              list='contractedService'
-              value={formData.contractedService}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            <datalist id='contractedService'>
-                <option value="Traslado"></option>
-                <option value="Excursión"></option>
-                <option value="Disponibilidad"></option>
-              </datalist>
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Tipo de servicio:
-            </label>
-            <input
-              type="text"
-              name="serviceType"
-              list='serviceTypes'
-              value={formData.serviceType}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            <datalist id='serviceTypes'>
-                <option value="SD"></option>
-                <option value="DR"></option>
-                <option value="SPREG"></option>
-                <option value="TUR"></option>
-            </datalist>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Número de pasajeros:
-            </label>
-            <input
-              type="number"
-              name="passengers"
-              inputMode="numeric"
-              value={formData.passengers}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Metodo de pago
-            </label>
-            <input
-              type="text"
-              name="paymentMethod"
-              list='paymentMethods'
-              value={formData.paymentMethod}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-            <datalist id='paymentMethods'>
-              <option value="Efectivo">Efectivo</option>
-              <option value="Tarjeta">Tarjeta</option>
-              <option value="Transferencia bancaria">Transferencia bancaria</option>
-            </datalist>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Precio:
-            </label>
-            <input
-              type="number"
-              name="price"
-              inputMode="numeric"
-              value={formData.price}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border rounded-md"
-            />
-          </div>
-          <div className="mb-4">
+            <div className="mb-6">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Vehículo:
+                Destino:
               </label>
               <input
-                name="vehicle"
-                type='text'
-                list='vehicles'
-                value={formData.vehicle}
+                id="destination"
+                type="text"
+                name="destination"
+                list="municipiosDestinoList"
+                value={formData.destination}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-md"
               />
-              <datalist id='vehicles'>
-                <option value="7788DTM">7788DTM</option>
-                <option value="0774HKP">0774HKP</option>
-                <option value="5817FTT">5817FTT</option>
+              <datalist id='municipiosDestinoList'>
+                {municipios.map((item) => <option key={item} value={item}> {item} </option>)}
               </datalist>
-          </div>
-          <div className="mb-4">
+            </div>
+
+            <div className="mb-4">
               <label className="block text-gray-700 text-sm font-bold mb-2">
-                Observaciones:
+                Servicio contratado
               </label>
-              <textarea
-                name="observations"
-                value={formData.observations}
+              <input
+                type="text"
+                name="contractedService"
+                list='contractedService'
+                value={formData.contractedService}
                 onChange={handleInputChange}
                 className="w-full px-3 py-2 border rounded-md"
               />
+              <datalist id='contractedService'>
+                  <option value="Traslado"></option>
+                  <option value="Excursión"></option>
+                  <option value="Disponibilidad"></option>
+                </datalist>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Tipo de servicio:
+              </label>
+              <input
+                type="text"
+                name="serviceType"
+                list='serviceTypes'
+                value={formData.serviceType}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+              <datalist id='serviceTypes'>
+                  <option value="SD"></option>
+                  <option value="DR"></option>
+                  <option value="SPREG"></option>
+                  <option value="TUR"></option>
+              </datalist>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Número de pasajeros:
+              </label>
+              <input
+                type="text"
+                name="passengers"
+                inputMode="numeric"
+                value={formData.passengers}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Metodo de pago
+              </label>
+              <input
+                type="text"
+                name="paymentMethod"
+                list='paymentMethods'
+                value={formData.paymentMethod}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+              <datalist id='paymentMethods'>
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="Transferencia bancaria">Transferencia bancaria</option>
+              </datalist>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Precio:
+              </label>
+              <input
+                type="text"
+                name="price"
+                inputMode="numeric"
+                value={formData.price}
+                onChange={handleInputChange}
+                className="w-full px-3 py-2 border rounded-md"
+              />
+            </div>
+            <div className="mb-4">
+                <label className="block text-gray-700 text-sm font-bold mb-2">
+                  Vehículo:
+                </label>
+                <input
+                  name="vehicle"
+                  type='text'
+                  list='vehicles'
+                  value={formData.vehicle}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded-md"
+                />
+                <datalist id='vehicles'>
+                  <option value="1999FSK">1999FSK</option>
+                  <option value="0774HKP">0774HKP</option>
+                </datalist>
+            </div>
           </div>
         </div>
-      </div>
-      
+        
+        <div className="flex justify-center">
+          {!loading ? 
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full"
+            >
+              Guardar hoja de ruta
+            </button>
+          :
+            <div
+              className=" text-black text-center font-bold py-2 px-4 rounded-md flex flex-col justify-center align-middle w-full"
+            >
+              <div className='flex gap-4 w-full justify-center'>
+                <GreatLoader />
+                <p>{onProgress}%</p>
+              </div>
+              <div className='w-full text-center'>Guardando hoja de ruta. Un momento por favor.  <br />
+              No cierre la ventana hasta que se haya completado la carga. </div>
+              
+            </div>
+          }
+        </div>
+      </form>
 
-      
-      <div className="flex justify-center">
-        {!loading ? 
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md w-full"
-          >
-            Guardar hoja de ruta
-          </button>
-        :
-          <div
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md flex justify-center w-full"
-          >
-            un momento...
-            <GreatLoader />
+      <div className='mx-auto max-w-4xl p-6 bg-white rounded-md shadow-lg flex flex-col gap-3'>
+          <h1 className='text-gray-700 text-lg font-bold'>Mis hojas de ruta</h1>
+          <div className='flex gap-4 flex-wrap w-full justify-center'>
+            {userRoadmaps.map((roadmap, key) => {
+
+
+            const timestamp = roadmap.date instanceof Date
+            ? roadmap.date
+            : new Date(roadmap.date.seconds * 1000 + (roadmap.date.nanoseconds || 0) / 1e6);
+
+            const date = timestamp.toLocaleDateString();
+            const time = timestamp.toLocaleTimeString();
+
+              return(
+                <div key={key} className=' w-30 h-fit '
+                  style={{
+                    border: '1px solid #e0e0e0',
+                    padding: '1rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    textAlign: 'center'
+                  }}
+                >
+                  <p><strong>Clinte:</strong> {roadmap.client.name}</p>
+                  <p>{date} / {time}</p>
+                  <a href={roadmap.invoiceUrl} target="_blank" rel="noreferrer">
+                    <FaRegFilePdf color='#ff0000' fontSize={40} />
+                  </a>
+                </div>
+              )
+            })}
           </div>
-        }
       </div>
-      
-    </form>
+    </div>
   );
 };
 

@@ -231,17 +231,17 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 <div class="header-container">
                     <div class="logo-container">
                         <img 
-                            src="/logo_02.png"
+                            src="/images/logo_new.jpg"
                             alt="Logo"
                         />
                     </div>
                     <div class="header-info-container">
-                        <p>CIF: B44651552</p>
+                        <p>CIF: B75797142</p>
                         <p>Tel: 671 741 577</p>
-                        <p>Calle Music Baltasar Samper, 2B 3-1</p>
-                        <p>07008 Palma de Mallorca</p>
+                        <p>Calle Dels fadrins 18,1</p>
+                        <p>07420 Sa Pobla</p>
                         <p>ILLES BALEARS</p>
-                        <p>santiagosbus@gmail.com</p>
+                        <p>info.b1fg@gmail.com</p>
                     </div>
                 </div>
 
@@ -333,7 +333,7 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
               <p>Documento: ${driver.documentID}</p>
               <p>Teléfono: ${driver.phone}</p>
               <p>Matrícula Vehiculo: ${roadMapProps.vehicle}</p>
-              <p>Mallorca Transfer 2023 SL</p>
+              <p> Big One for Groups SL</p>
               <p>Gracias por elegir nuestros servicios.</p>
             </div>
           </main>

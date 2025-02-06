@@ -5,6 +5,7 @@ import { municipios } from '../data/MarllorcaMunicipios';
 import GreatLoader from '../loaders/GreatLoader';
 import toast from 'react-hot-toast';
 import { db } from '../../services/FirebaseService';
+import { doc, updateDoc } from 'firebase/firestore';
 import { RoadMapTemplate } from '../templates/RoadMapTemplate';
 
 interface EditInvoiceProps {
@@ -88,21 +89,25 @@ const EditInvoice: React.FC<EditInvoiceProps> = ({formData, closeModal}) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!localFormData.id) {
+      toast.error('El id de la hoja de ruta es requerido');
+      return;
+    }
     setLoading(true);
     try {
-
-      // TODO actualizar el PDF con los datos del conductor. 
+      // TODO: actualizar el PDF con los datos del conductor.
       // const roadMapTemplate = new RoadMapTemplate(localFormData);
-
-      await db.collection('road-maps').doc(localFormData.id).update(localFormData)
+      
+      const roadMapRef = doc(db, 'road-maps', localFormData.id);
+      await updateDoc(roadMapRef, localFormData);
+      
       setLoading(false);
-      toast.success('Hoja de ruta actualizada correctamente')
+      toast.success('Hoja de ruta actualizada correctamente');
     } catch (error) {
       setLoading(false);
-      toast.error('ups, algo ha ido mal. Intentelo nuevamente')
+      toast.error('Ups, algo ha ido mal. Inténtalo nuevamente');
     }
   };
-
   return (
     <form
       onSubmit={handleSubmit}
