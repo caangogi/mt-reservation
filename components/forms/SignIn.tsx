@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../../context/auth';
 import Link from 'next/link';
 import Image from 'next/image';
-import Logo from '/public/logo_02.png';
+import Logo from '/public/images/logo_new_.jpg';
 import GreatLoader from '../loaders/GreatLoader';
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash  } from "react-icons/fa";
@@ -40,13 +40,10 @@ const LoginForm: React.FC = () => {
         >
           <Image 
             src={Logo}
-            width={80}
-            height={80}
+            width={200}
+            height={200}
             alt='Mallorca Transfer Logo'
           />
-          <div className='flex flex-col'>
-              <p className='text-xl text-blue-app'>Mallorca Transfer</p>
-          </div>
         </div>
         <div>
           <p className="text-center text-lg font-bold mb-4">Iniciar Sesión</p>
@@ -76,21 +73,21 @@ const LoginForm: React.FC = () => {
           </div>
          {!loading ? 
            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-md w-full"
+              className="bg-black text-white px-4 py-2 rounded-md w-full"
               onClick={handleSignIn}
             >
               {'Iniciar sesión'}
             </button>
           :
           <button
-              className="bg-blue-500 text-white text-center px-4 py-2 rounded-md flex w-full"
+              className="bg-black text-white text-center px-4 py-2 rounded-md flex w-full"
           >
             {'Un momento...'} <GreatLoader />
           </button>
           }
           <p className="mt-4 text-sm">
             ¿No tienes una cuenta?{' '}
-            <Link href="/create-account" legacyBehavior>
+            <Link href="/crear-cuenta" legacyBehavior>
               <a className="text-blue-500 cursor-pointer">Regístrate aquí</a>
             </Link>
           </p>

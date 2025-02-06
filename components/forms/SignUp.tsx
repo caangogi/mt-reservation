@@ -131,7 +131,7 @@ const SignupForm: React.FC = () => {
           }
           <p className="mt-4 text-sm">
             ¿Ya tienes una cuenta?{' '}
-            <Link href="/login" legacyBehavior>
+            <Link href="/signin" legacyBehavior>
               <a className="text-blue-500 cursor-pointer">Accede desde aquí</a>
             </Link>
           </p>
