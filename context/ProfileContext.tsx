@@ -1,5 +1,5 @@
-import  { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { auth, db } from '../services/FirebaseService';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { db } from '../services/FirebaseService';
 import { doc, getDoc } from 'firebase/firestore';
 import { User } from '../backend/share/types';
 
@@ -9,7 +9,7 @@ type ProfileContextType = {
 };
 
 type ProfileProviderProps = {
-  children?: ReactNode; 
+  children?: ReactNode;
 };
 
 const ProfileContext = createContext<ProfileContextType | undefined>(undefined);
@@ -19,9 +19,10 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
 
   const getUserData = async (uid: string): Promise<User | null> => {
     try {
+      // Creamos la referencia al documento usando el enfoque modular
       const userRef = doc(db, 'users', uid);
       const snapshot = await getDoc(userRef);
-  
+
       if (snapshot.exists()) {
         const userData = snapshot.data() as User;
         return userData;
@@ -36,7 +37,7 @@ export const ProfileProvider: React.FC<ProfileProviderProps> = ({ children }) =>
   };
 
   useEffect(() => {
-    // Perform any initial setup or data fetching here
+    // Aquí puedes realizar alguna configuración o carga de datos inicial si es necesario
   }, []);
 
   const value: ProfileContextType = {
