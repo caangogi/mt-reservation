@@ -70,7 +70,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async (): Promise<void> => {
     try {
       await signOut(auth);
-      router.push("/login");
+      router.push("/signin");
     } catch (error) {
       console.error("Error al cerrar sesión:", error);
       throw error;

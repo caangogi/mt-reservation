@@ -8,7 +8,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY)
 
 export default function App({amount, params}) {
   const [clientSecret, setClientSecret] = React.useState("");
-
+  
   useEffect(() => {
     async function createPaymentIntent() {
       try {
