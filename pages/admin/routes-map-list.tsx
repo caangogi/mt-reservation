@@ -11,7 +11,7 @@ const RoutesMapList: React.FC = () => {
     const Router = useRouter();
     if (userProfile && userProfile.type !== 'admin') {
       toast.error('Acceso denegado');
-      Router.push('/login');
+      Router.push('/signin');
       return <></>;
 }
 

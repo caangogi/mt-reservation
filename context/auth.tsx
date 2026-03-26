@@ -24,7 +24,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<CustomUser | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const createUser = new CreateUser();
   const router = useRouter();
 
@@ -95,10 +95,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   // Listener para cambios en la autenticación
   useEffect(() => {
     setLoading(true);
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
       if (user?.uid) {
-        getUserById(user.uid);
+        await getUserById(user.uid);
       }
       setLoading(false);
     });

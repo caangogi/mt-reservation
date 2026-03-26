@@ -15,12 +15,16 @@ const withAuth = (WrappedComponent: React.FC) => {
         }
 
         if (!currentUser) {
-          router.push('/login'); 
+          router.push('/signin'); 
         }
       };
 
       redirect();
     }, [currentUser, loading, router]);
+
+    if (loading) {
+      return null;
+    }
 
     return(
       <div>
