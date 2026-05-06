@@ -231,17 +231,17 @@ export const RoadMapTemplate = (roadMapProps: RoadMapProps, driver: User) => {
                 <div class="header-container">
                     <div class="logo-container">
                         <img 
-                            src="/images/logo_new.jpg"
+                            src="/images/logo-new.jpeg"
                             alt="Logo"
                         />
                     </div>
                     <div class="header-info-container">
-                        <p>CIF: B75797142</p>
-                        <p>Tel: 671 741 577</p>
-                        <p>Calle Dels fadrins 18,1</p>
-                        <p>07420 Sa Pobla</p>
+                        <p>CIF: B57754913</p>
+                        <p>Tel: 680 94 5599</p>
+                        <p> Calle Son Boi 7A </p>
+                        <p>07330 Consell</p>
                         <p>ILLES BALEARS</p>
-                        <p>info.b1fg@gmail.com</p>
+                        <p>happybusmarsur26@gmail.com</p>
                     </div>
                 </div>
 
