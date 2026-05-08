@@ -328,7 +328,7 @@ export const InvoiceTemplate = (roadMapProps: RoadMapProps, driver: User) => {
             <p>Documento: ${driver.documentID}</p>
             <p>Teléfono: ${driver.phone}</p>
             <p>Matrícula del Vehiculo: ${roadMapProps.vehicle} </p>
-            <p> Big One for Groups SL</p>
+            <p> Happy Bus Marsur SL</p>
             <p>Gracias por elegir nuestros servicios.</p>
           </div>
 
